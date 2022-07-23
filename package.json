@@ -22,9 +22,9 @@
     "typescript": "^4.7.4"
   },
   "scripts": {
+    "test:unit": "jest -c jest.config.js",
     "postinstall": "husky install",
-    "prepare": "husky install",
-    "test": "jest"
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.ts": [
