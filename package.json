@@ -21,5 +21,11 @@
   "scripts": {
     "postinstall": "husky install",
     "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint 'src/**' --fix",
+      "git add"
+    ]
   }
 }
