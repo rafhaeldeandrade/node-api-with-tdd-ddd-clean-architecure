@@ -1,6 +1,16 @@
 import { SignupController } from '@/presentation/controllers/signup'
 import { faker } from '@faker-js/faker'
 
+interface makeSutInterface {
+  sut: SignupController
+}
+
+function makeSut(): makeSutInterface {
+  const sut = new SignupController()
+
+  return { sut }
+}
+
 const fakePassword = faker.internet.password()
 const httpRequest = {
   body: {
@@ -12,19 +22,19 @@ const httpRequest = {
 
 describe('SignupController', () => {
   it('should be defined', () => {
-    const sut = new SignupController()
+    const { sut } = makeSut()
 
     expect(sut).toBeDefined()
   })
 
   it('should have an method called handle', () => {
-    const sut = new SignupController()
+    const { sut } = makeSut()
 
     expect(sut.handle).toBeDefined()
   })
 
   it('should return status 400 when email is not provided', async () => {
-    const sut = new SignupController()
+    const { sut } = makeSut()
 
     const promise = await sut.handle(httpRequest as any)
 
