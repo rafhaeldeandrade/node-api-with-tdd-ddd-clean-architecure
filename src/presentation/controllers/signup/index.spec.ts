@@ -6,4 +6,10 @@ describe('SignupController', () => {
 
     expect(sut).toBeDefined()
   })
+
+  it('should have an method called handle', () => {
+    const sut = new SignupController()
+
+    expect(sut.handle).toBeDefined()
+  })
 })
