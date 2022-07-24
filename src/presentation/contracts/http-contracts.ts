@@ -1,6 +1,5 @@
 export interface httpRequest {
-  body: {
-    name: string
+  body?: {
     email: string
     password: string
     passwordConfirmation: string
@@ -8,7 +7,8 @@ export interface httpRequest {
 }
 
 export interface httpResponse {
-  body: {
-    statusCode: number
+  statusCode: number
+  body?: {
+    [key: string]: any
   }
 }
