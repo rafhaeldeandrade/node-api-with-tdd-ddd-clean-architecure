@@ -28,7 +28,7 @@ describe('SignupController', () => {
 
     const promise = await sut.handle(httpRequest as any)
 
-    const httpResponse = { body: { statusCode: 400 } }
+    const httpResponse = { statusCode: 400 }
 
     expect(promise).toEqual(httpResponse)
   })
