@@ -5,6 +5,6 @@ import {
 
 export class SignupController {
   async handle(params: httpRequest): Promise<httpResponse> {
-    return await Promise.resolve({ body: { statusCode: 400 } })
+    return await Promise.resolve({ statusCode: 400 })
   }
 }
