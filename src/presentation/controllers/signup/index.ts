@@ -1,5 +1,10 @@
+import {
+  httpRequest,
+  httpResponse
+} from '@/presentation/contracts/http-contracts'
+
 export class SignupController {
-  async handle(): Promise<void> {
-    return await Promise.resolve()
+  async handle(params: httpRequest): Promise<httpResponse> {
+    return await Promise.resolve({ body: { statusCode: 400 } })
   }
 }
