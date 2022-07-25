@@ -5,6 +5,20 @@ import {
 
 export class SignupController {
   async handle(params: httpRequest): Promise<httpResponse> {
-    return await Promise.resolve({ statusCode: 400 })
+    if (!params.body?.name) {
+      return {
+        statusCode: 400,
+        body: new Error('Missing param: name')
+      }
+    }
+
+    if (!params.body?.email) {
+      return {
+        statusCode: 400,
+        body: new Error('Missing param: email')
+      }
+    }
+
+    return await Promise.resolve({ statusCode: 200 })
   }
 }
