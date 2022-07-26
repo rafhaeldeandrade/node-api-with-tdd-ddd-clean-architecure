@@ -1,6 +1,7 @@
 import { SignupController } from '@/presentation/controllers/signup'
 import { faker } from '@faker-js/faker'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
+import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 
 interface makeSutInterface {
   sut: SignupController
@@ -94,6 +95,28 @@ describe('SignupController', () => {
     const httpResponse = {
       statusCode: 400,
       body: new MissingParamError('passwordConfirmation')
+    }
+
+    expect(promise).toEqual(httpResponse)
+  })
+
+  it('should return 400 when password is different from passwordConfirmation', async () => {
+    const { sut } = makeSut()
+
+    const {
+      body: { password, passwordConfirmation, ...httpRequestParams }
+    } = httpRequest
+    const promise = await sut.handle({
+      body: {
+        ...httpRequestParams,
+        password: faker.internet.password(4),
+        passwordConfirmation: faker.internet.password(5)
+      }
+    } as any)
+
+    const httpResponse = {
+      statusCode: 400,
+      body: new InvalidParamError('passwordConfirmation')
     }
 
     expect(promise).toEqual(httpResponse)
