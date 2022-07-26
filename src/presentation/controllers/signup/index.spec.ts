@@ -66,4 +66,20 @@ describe('SignupController', () => {
 
     expect(promise).toEqual(httpResponse)
   })
+
+  it('should return status 400 when password is not provided', async () => {
+    const { sut } = makeSut()
+
+    const {
+      body: { password, ...httpRequestParams }
+    } = httpRequest
+    const promise = await sut.handle({ body: httpRequestParams } as any)
+
+    const httpResponse = {
+      statusCode: 400,
+      body: new MissingParamError('password')
+    }
+
+    expect(promise).toEqual(httpResponse)
+  })
 })
