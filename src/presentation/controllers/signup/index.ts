@@ -1,7 +1,4 @@
-import {
-  httpRequest,
-  httpResponse
-} from '@/presentation/contracts/http-contracts'
+import { httpRequest, httpResponse } from '@/presentation/contracts/http'
 
 export class SignupController {
   async handle(params: httpRequest): Promise<httpResponse> {
