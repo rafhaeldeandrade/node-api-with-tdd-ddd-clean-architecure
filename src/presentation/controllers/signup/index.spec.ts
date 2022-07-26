@@ -1,5 +1,6 @@
 import { SignupController } from '@/presentation/controllers/signup'
 import { faker } from '@faker-js/faker'
+import { MissingParamError } from '@/presentation/errors/missing-param-error'
 
 interface makeSutInterface {
   sut: SignupController
@@ -44,7 +45,7 @@ describe('SignupController', () => {
 
     const httpResponse = {
       statusCode: 400,
-      body: new Error('Missing param: name')
+      body: new MissingParamError('name')
     }
 
     expect(promise).toEqual(httpResponse)
@@ -60,7 +61,7 @@ describe('SignupController', () => {
 
     const httpResponse = {
       statusCode: 400,
-      body: new Error('Missing param: email')
+      body: new MissingParamError('email')
     }
 
     expect(promise).toEqual(httpResponse)
