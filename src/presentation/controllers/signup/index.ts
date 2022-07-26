@@ -4,7 +4,7 @@ import { badRequest } from '@/presentation/helpers/http-helper'
 
 export class SignupController {
   async handle(params: httpRequest): Promise<httpResponse | boolean> {
-    const requiredParams = ['name', 'email']
+    const requiredParams = ['name', 'email', 'password']
 
     for (const param of requiredParams) {
       if (!params.body[param as keyof typeof params.body]) {
