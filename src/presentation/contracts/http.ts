@@ -3,6 +3,7 @@ export interface httpRequest {
     name: string
     email: string
     password: string
+    passwordConfirmation: string
   }
 }
 

@@ -1,4 +1,5 @@
 import { httpRequest, httpResponse } from '@/presentation/contracts/http'
+import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import { badRequest } from '@/presentation/helpers/http-helper'
 
@@ -10,6 +11,10 @@ export class SignupController {
       if (!params.body[param as keyof typeof params.body]) {
         return badRequest(new MissingParamError(param))
       }
+    }
+
+    if (params.body.password !== params.body.passwordConfirmation) {
+      return badRequest(new InvalidParamError('passwordConfirmation'))
     }
 
     return true
