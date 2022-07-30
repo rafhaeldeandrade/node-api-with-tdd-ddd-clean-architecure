@@ -1,12 +1,16 @@
+import { AddAccountUseCase } from '@/domain/usecases/add-account'
 import { Controller } from '@/presentation/contracts/controller'
 import { httpRequest, httpResponse } from '@/presentation/contracts/http'
 import { MailValidator } from '@/presentation/contracts/mail-validator'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
-import { badRequest, serverError } from '@/presentation/helpers/http-helper'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http-helper'
 
 export class SignupController implements Controller<httpRequest, httpResponse> {
-  constructor(private readonly mailValidator: MailValidator) {}
+  constructor(
+    private readonly mailValidator: MailValidator,
+    private readonly addAccountUseCase: AddAccountUseCase
+  ) {}
 
   async handle(params: httpRequest): Promise<httpResponse> {
     try {
@@ -23,7 +27,7 @@ export class SignupController implements Controller<httpRequest, httpResponse> {
         }
       }
 
-      const { email, password, passwordConfirmation } = params.body
+      const { name, email, password, passwordConfirmation } = params.body
       if (password !== passwordConfirmation) {
         return badRequest(new InvalidParamError('passwordConfirmation'))
       }
@@ -34,12 +38,13 @@ export class SignupController implements Controller<httpRequest, httpResponse> {
         return badRequest(new InvalidParamError('email'))
       }
 
-      return {
-        statusCode: 200,
-        body: {
-          message: 'ok'
-        }
-      }
+      const account = await this.addAccountUseCase.add({
+        name,
+        email,
+        password
+      })
+
+      return ok(account)
     } catch (_error) {
       return serverError()
     }

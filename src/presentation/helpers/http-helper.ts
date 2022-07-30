@@ -14,3 +14,10 @@ export function serverError(): httpResponse {
     body: new ServerError()
   }
 }
+
+export function ok(params: any): httpResponse {
+  return {
+    statusCode: 200,
+    body: params
+  }
+}
