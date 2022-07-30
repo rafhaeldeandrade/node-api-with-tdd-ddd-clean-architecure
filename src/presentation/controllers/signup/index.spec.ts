@@ -2,15 +2,24 @@ import { SignupController } from '@/presentation/controllers/signup'
 import { faker } from '@faker-js/faker'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
+import { MailValidator } from '@/presentation/contracts/mail-validator'
 
 interface makeSutInterface {
   sut: SignupController
+  mailValidatorStub: MailValidator
+}
+
+class MailValidatorStub implements MailValidator {
+  isValid(email: string): boolean {
+    return true
+  }
 }
 
 function makeSut(): makeSutInterface {
-  const sut = new SignupController()
+  const mailValidatorStub = new MailValidatorStub()
+  const sut = new SignupController(mailValidatorStub)
 
-  return { sut }
+  return { sut, mailValidatorStub }
 }
 
 const fakePassword = faker.internet.password()
@@ -120,5 +129,14 @@ describe('SignupController', () => {
     }
 
     expect(promise).toEqual(httpResponse)
+  })
+
+  it('should calls emailValidator with the correct params', async () => {
+    const { sut, mailValidatorStub } = makeSut()
+
+    const isValidSpy = jest.spyOn(mailValidatorStub, 'isValid')
+    await sut.handle(httpRequest)
+
+    expect(isValidSpy).toHaveBeenCalledWith(httpRequest.body.email)
   })
 })
