@@ -8,6 +8,7 @@
     "@faker-js/faker": "^7.3.0",
     "@types/jest": "^28.1.6",
     "@types/node": "^18.0.6",
+    "@types/validator": "^13.7.4",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.5.0",
@@ -39,5 +40,8 @@
       "npm run test:staged",
       "git add"
     ]
+  },
+  "dependencies": {
+    "validator": "^13.7.0"
   }
 }
