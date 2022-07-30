@@ -1,14 +1,14 @@
 import { AddAccountUseCase } from '@/domain/usecases/add-account'
 import { Controller } from '@/presentation/contracts/controller'
 import { httpRequest, httpResponse } from '@/presentation/contracts/http'
-import { MailValidator } from '@/presentation/contracts/mail-validator'
+import { EmailValidator } from '@/presentation/contracts/email-validator'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import { badRequest, ok, serverError } from '@/presentation/helpers/http-helper'
 
 export class SignupController implements Controller<httpRequest, httpResponse> {
   constructor(
-    private readonly mailValidator: MailValidator,
+    private readonly emailValidator: EmailValidator,
     private readonly addAccountUseCase: AddAccountUseCase
   ) {}
 
@@ -32,7 +32,7 @@ export class SignupController implements Controller<httpRequest, httpResponse> {
         return badRequest(new InvalidParamError('passwordConfirmation'))
       }
 
-      const mailIsValid = this.mailValidator.isValid(email)
+      const mailIsValid = this.emailValidator.isValid(email)
 
       if (!mailIsValid) {
         return badRequest(new InvalidParamError('email'))
