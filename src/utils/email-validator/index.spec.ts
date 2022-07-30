@@ -30,4 +30,13 @@ describe('EmailValidator', () => {
 
     expect(isValid).toBe(false)
   })
+
+  it('should return true if validator returns true', () => {
+    const { sut } = makeSut()
+
+    jest.spyOn(validator, 'isEmail').mockReturnValueOnce(true)
+    const isValid = sut.isValid(faker.internet.email())
+
+    expect(isValid).toBe(true)
+  })
 })
