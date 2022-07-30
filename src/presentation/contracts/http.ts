@@ -9,7 +9,9 @@ export interface httpRequest {
 
 export interface httpResponse {
   statusCode: number
-  body?: {
-    [key: string]: any
-  }
+  body?: Error | HttpResponseMessage
+}
+
+interface HttpResponseMessage {
+  [key: string]: any
 }
