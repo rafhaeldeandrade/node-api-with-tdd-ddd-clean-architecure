@@ -207,4 +207,26 @@ describe('SignupController', () => {
       password: httpRequest.body.password
     })
   })
+
+  it('should return 200 when everything works', async () => {
+    const { sut, addAccountStub } = makeSut()
+
+    const mockAddResult = {
+      id: faker.datatype.uuid(),
+      name: httpRequest.body.name,
+      email: httpRequest.body.email,
+      password: httpRequest.body.password
+    }
+
+    jest
+      .spyOn(addAccountStub, 'add')
+      .mockImplementationOnce(async () => mockAddResult)
+
+    const result = await sut.handle(httpRequest)
+
+    expect(result).toEqual({
+      statusCode: 200,
+      body: mockAddResult
+    })
+  })
 })
