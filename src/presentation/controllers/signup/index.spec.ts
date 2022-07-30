@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import { MailValidator } from '@/presentation/contracts/mail-validator'
+import { ServerError } from '@/presentation/errors/server-error'
 
 interface makeSutInterface {
   sut: SignupController
@@ -150,6 +151,23 @@ describe('SignupController', () => {
     const httpResponse = {
       statusCode: 400,
       body: new InvalidParamError('email')
+    }
+
+    expect(result).toEqual(httpResponse)
+  })
+
+  it('should return 500 if some external lib crashes', async () => {
+    const { sut, mailValidatorStub } = makeSut()
+
+    jest.spyOn(mailValidatorStub, 'isValid').mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    const result = await sut.handle(httpRequest)
+
+    const httpResponse = {
+      statusCode: 500,
+      body: new ServerError()
     }
 
     expect(result).toEqual(httpResponse)
