@@ -1,4 +1,4 @@
-import { AddAccountUseCase } from '@/domain/usecases/add-account'
+import { AddAccountUseCase } from '@/presentation/usecases/add-account'
 import { Controller } from '@/presentation/contracts/controller'
 import { httpRequest, httpResponse } from '@/presentation/contracts/http'
 import { EmailValidator } from '@/presentation/contracts/email-validator'

@@ -8,7 +8,7 @@ import { AccountModel } from '@/domain/models/account'
 import {
   AddAccountModel,
   AddAccountUseCase
-} from '@/domain/usecases/add-account'
+} from '@/presentation/usecases/add-account'
 
 interface makeSutInterface {
   sut: SignupController
