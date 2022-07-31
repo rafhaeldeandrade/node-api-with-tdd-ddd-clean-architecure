@@ -1,30 +1,45 @@
+import { AddAccountRepository } from '@/data/contracts/add-account-repository'
 import { Encrypter } from '@/data/contracts/encrypter'
 import { DbAddAccount } from '@/data/usecases/add-account/db-add-account'
-import { AddAccount } from '@/domain/usecases/add-account'
+import { AccountModel } from '@/domain/models/account'
+import { AddAccount, AddAccountModel } from '@/domain/usecases/add-account'
 import { faker } from '@faker-js/faker'
 
+const fakeId: string = faker.datatype.uuid()
+const fakePassword = faker.internet.password()
+const fakeData = {
+  name: faker.name.findName(),
+  email: faker.internet.email(),
+  password: fakePassword
+}
 class EncrypterStub implements Encrypter {
   async encrypt(value: string): Promise<string> {
-    return await new Promise((resolve) => resolve('hashed_password'))
+    return await new Promise((resolve) => resolve('hash' + fakePassword))
+  }
+}
+
+class AddAccountRepositoryStub implements AddAccountRepository {
+  async add(accountData: AddAccountModel): Promise<AccountModel> {
+    return {
+      id: fakeId,
+      name: fakeData.name,
+      email: fakeData.email,
+      password: 'hash' + fakeData.password
+    }
   }
 }
 
 interface SutTypes {
   sut: AddAccount
   encrypter: Encrypter
+  addAccountRepository: AddAccountRepository
 }
 
 function makeSut(): SutTypes {
   const encrypter = new EncrypterStub()
-  const sut = new DbAddAccount(encrypter)
-  return { sut, encrypter }
-}
-
-const fakePassword = faker.internet.password()
-const fakeData = {
-  name: faker.name.findName(),
-  email: faker.internet.email(),
-  password: fakePassword
+  const addAccountRepository = new AddAccountRepositoryStub()
+  const sut = new DbAddAccount(encrypter, addAccountRepository)
+  return { sut, encrypter, addAccountRepository }
 }
 
 describe('DbAddAccountUseCase', () => {
@@ -59,5 +74,19 @@ describe('DbAddAccountUseCase', () => {
     const promise = sut.add(fakeData)
 
     await expect(promise).rejects.toThrow()
+  })
+
+  it('should call addAccountRepository with the correct params', async () => {
+    const { sut, addAccountRepository } = makeSut()
+
+    const addSpy = jest.spyOn(addAccountRepository, 'add')
+    await sut.add(fakeData)
+
+    expect(addSpy).toHaveBeenCalledTimes(1)
+    expect(addSpy).toHaveBeenCalledWith({
+      name: fakeData.name,
+      email: fakeData.email,
+      password: 'hash' + fakePassword
+    })
   })
 })
