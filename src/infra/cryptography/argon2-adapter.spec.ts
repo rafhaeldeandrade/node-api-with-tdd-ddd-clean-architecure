@@ -65,4 +65,24 @@ describe('Argon2Adapter', () => {
 
     expect(hash).toBe(hashedPassword)
   })
+
+  it('should throw an error if argon2 throws', async () => {
+    const argon2Options = {
+      type: argon2.argon2id,
+      memoryCost: 37888,
+      parallelism: 1,
+      timeCost: 2
+    }
+
+    const { sut } = makeSut(argon2Options)
+
+    jest.spyOn(argon2, 'hash').mockImplementationOnce(async () => {
+      throw new Error()
+    })
+
+    const fakePassword = faker.internet.password()
+    const promise = sut.encrypt(fakePassword)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
