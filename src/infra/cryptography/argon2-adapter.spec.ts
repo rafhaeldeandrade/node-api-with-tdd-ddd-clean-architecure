@@ -43,4 +43,26 @@ describe('Argon2Adapter', () => {
 
     expect(hashSpy).toHaveBeenCalledWith(fakePassword, argon2Options)
   })
+
+  it('should return a hash on success', async () => {
+    const argon2Options = {
+      type: argon2.argon2id,
+      memoryCost: 37888,
+      parallelism: 1,
+      timeCost: 2
+    }
+
+    const { sut } = makeSut(argon2Options)
+
+    const hashedPassword = faker.datatype.uuid()
+    jest
+      .spyOn(argon2, 'hash')
+      .mockImplementationOnce(async () => hashedPassword)
+
+    const fakePassword = faker.internet.password()
+
+    const hash = await sut.encrypt(fakePassword)
+
+    expect(hash).toBe(hashedPassword)
+  })
 })
