@@ -1,4 +1,4 @@
-import { AddAccountUseCase } from '@/presentation/usecases/add-account'
+import { AddAccount } from '@/domain/usecases/add-account'
 import { Controller } from '@/presentation/contracts/controller'
 import { httpRequest, httpResponse } from '@/presentation/contracts/http'
 import { EmailValidator } from '@/presentation/contracts/email-validator'
@@ -9,7 +9,7 @@ import { badRequest, ok, serverError } from '@/presentation/helpers/http-helper'
 export class SignupController implements Controller<httpRequest, httpResponse> {
   constructor(
     private readonly emailValidator: EmailValidator,
-    private readonly addAccountUseCase: AddAccountUseCase
+    private readonly addAccountUseCase: AddAccount
   ) {}
 
   async handle(params: httpRequest): Promise<httpResponse> {

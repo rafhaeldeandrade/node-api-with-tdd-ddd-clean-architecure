@@ -5,15 +5,12 @@ import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import { EmailValidator } from '@/presentation/contracts/email-validator'
 import { ServerError } from '@/presentation/errors/server-error'
 import { AccountModel } from '@/domain/models/account'
-import {
-  AddAccountModel,
-  AddAccountUseCase
-} from '@/presentation/usecases/add-account'
+import { AddAccountModel, AddAccount } from '@/domain/usecases/add-account'
 
 interface makeSutInterface {
   sut: SignupController
   emailValidatorStub: EmailValidator
-  addAccountStub: AddAccountUseCase
+  addAccountStub: AddAccount
 }
 
 class EmailValidatorStub implements EmailValidator {
@@ -32,7 +29,7 @@ const httpRequest = {
   }
 }
 
-class AddAccountStub implements AddAccountUseCase {
+class AddAccountStub implements AddAccount {
   async add(account: AddAccountModel): Promise<AccountModel> {
     const fakeAccount = {
       id: faker.datatype.uuid(),
