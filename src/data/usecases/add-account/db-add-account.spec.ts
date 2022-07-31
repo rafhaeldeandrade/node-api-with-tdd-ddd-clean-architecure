@@ -1,4 +1,4 @@
-import { Encrypter } from '@/data/protocols/encrypter'
+import { Encrypter } from '@/data/contracts/encrypter'
 import { DbAddAccount } from '@/data/usecases/add-account/db-add-account'
 import { AddAccount } from '@/domain/usecases/add-account'
 import { faker } from '@faker-js/faker'
@@ -48,5 +48,16 @@ describe('DbAddAccountUseCase', () => {
 
     expect(encryptSpy).toHaveBeenCalledTimes(1)
     expect(encryptSpy).toHaveBeenCalledWith(fakePassword)
+  })
+
+  it('should throw an error if encrypter throws', async () => {
+    const { sut, encrypter } = makeSut()
+
+    jest.spyOn(encrypter, 'encrypt').mockImplementationOnce(async () => {
+      throw new Error()
+    })
+    const promise = sut.add(fakeData)
+
+    await expect(promise).rejects.toThrow()
   })
 })
