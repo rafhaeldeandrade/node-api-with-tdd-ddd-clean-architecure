@@ -6,4 +6,10 @@ describe('DbAddAccountUseCase', () => {
 
     expect(sut).toBeDefined()
   })
+
+  it('should have a add method', () => {
+    const sut = new DbAddAccount()
+
+    expect(sut.add).toBeDefined()
+  })
 })
