@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "argon2": "^0.28.7",
+    "mongoose": "^6.5.0",
     "validator": "^13.7.0"
   }
 }
