@@ -11,4 +11,4 @@ const accountSchema = new mongoose.Schema(
   }
 )
 
-export const accountModel = mongoose.model('Account', accountSchema)
+export const mongooseAccountModel = mongoose.model('Account', accountSchema)
