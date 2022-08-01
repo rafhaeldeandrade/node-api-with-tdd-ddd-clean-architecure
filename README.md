@@ -9,6 +9,7 @@ Esse é um projeto cujo objetivo é criar uma API com uma arquitetura bem defini
 - Typescript
 - Express
 - MongoDB
+- Mongoose
 - JWT
 - Argon2
 - Husky
