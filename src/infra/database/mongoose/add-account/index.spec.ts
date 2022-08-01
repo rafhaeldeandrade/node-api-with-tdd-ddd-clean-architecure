@@ -46,4 +46,26 @@ describe('MongooseAddAccount', () => {
     expect(createSpy).toHaveBeenCalledTimes(1)
     expect(createSpy).toHaveBeenCalledWith(fakeAccount)
   })
+
+  it('should return an AccountModel on success', async () => {
+    const { sut } = makeSut()
+
+    const fakeId = faker.datatype.uuid()
+    const fakeAccount = {
+      name: faker.name.findName(),
+      email: faker.internet.email(),
+      password: faker.internet.password()
+    }
+
+    mongooseAccountModel.create = jest
+      .fn()
+      .mockResolvedValueOnce({ _id: fakeId, ...fakeAccount })
+
+    const account = await sut.add(fakeAccount)
+
+    expect(account).toEqual({
+      id: fakeId,
+      ...fakeAccount
+    })
+  })
 })
