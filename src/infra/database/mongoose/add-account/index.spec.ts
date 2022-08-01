@@ -68,4 +68,22 @@ describe('MongooseAddAccount', () => {
       ...fakeAccount
     })
   })
+
+  it('should throw if create throws', async () => {
+    const { sut } = makeSut()
+
+    const fakeAccount = {
+      name: faker.name.findName(),
+      email: faker.internet.email(),
+      password: faker.internet.password()
+    }
+
+    mongooseAccountModel.create = jest.fn().mockImplementationOnce(async () => {
+      throw new Error()
+    })
+
+    const promise = sut.add(fakeAccount)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
