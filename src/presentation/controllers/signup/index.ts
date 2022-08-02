@@ -6,7 +6,7 @@ import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import { badRequest, ok, serverError } from '@/presentation/helpers/http-helper'
 
-export class SignupController implements Controller<httpRequest, httpResponse> {
+export class SignupController implements Controller {
   constructor(
     private readonly emailValidator: EmailValidator,
     private readonly addAccountUseCase: AddAccount

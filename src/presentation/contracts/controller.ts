@@ -1,3 +1,5 @@
-export interface Controller<T, U> {
-  handle: (request: T) => Promise<U>
+import { httpRequest, httpResponse } from '@/presentation/contracts/http'
+
+export interface Controller {
+  handle: (request: httpRequest) => Promise<httpResponse>
 }
