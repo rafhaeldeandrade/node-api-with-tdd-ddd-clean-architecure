@@ -7,7 +7,7 @@ export class Argon2Adapter implements Encrypter {
   ) {}
 
   async encrypt(value: string): Promise<string> {
-    const hash = await argon2.hash(value, this.argon2Options ?? { raw: false })
+    const hash = await argon2.hash(value, this.argon2Options)
 
     return hash
   }
