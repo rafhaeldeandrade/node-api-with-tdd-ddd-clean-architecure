@@ -1,9 +1,15 @@
 import { app } from '@/main/config/app'
-import * as dotenv from 'dotenv'
-dotenv.config()
+import env from '@/main/config/env'
+import mongoose from 'mongoose'
 
-const PORT = process.env.API_PORT ?? 4000
+const PORT = env.apiPort
+const MONGO_URL = env.mongoUrl
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`)
-})
+mongoose
+  .connect(MONGO_URL)
+  .then(() =>
+    app.listen(PORT, () => {
+      console.log(`Server listening on port ${PORT}`)
+    })
+  )
+  .catch(console.error)
