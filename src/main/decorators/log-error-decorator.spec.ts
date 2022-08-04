@@ -6,4 +6,10 @@ describe('LogErrorDecoratorController', () => {
 
     expect(sut).toBeDefined()
   })
+
+  it('should have a method called handle', () => {
+    const sut = new LogErrorDecoratorController()
+
+    expect(sut.handle).toBeDefined()
+  })
 })
