@@ -184,7 +184,7 @@ describe('SignupController', () => {
 
     const httpResponse = {
       statusCode: 500,
-      body: new ServerError()
+      body: new ServerError('')
     }
 
     expect(result).toEqual(httpResponse)

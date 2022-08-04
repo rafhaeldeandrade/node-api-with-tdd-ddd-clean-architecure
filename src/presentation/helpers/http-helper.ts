@@ -8,10 +8,10 @@ export function badRequest(error: Error): httpResponse {
   }
 }
 
-export function serverError(): httpResponse {
+export function serverError(error: Error): httpResponse {
   return {
     statusCode: 500,
-    body: new ServerError()
+    body: new ServerError(error?.stack as string)
   }
 }
 
