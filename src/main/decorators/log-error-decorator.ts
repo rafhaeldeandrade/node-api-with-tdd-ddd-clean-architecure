@@ -5,7 +5,8 @@ export class LogErrorDecoratorController implements Controller {
   constructor(private readonly controller: Controller) {}
 
   async handle(httpRequest: httpRequest): Promise<httpResponse> {
-    await this.controller.handle(httpRequest)
-    return null as unknown as httpResponse
+    const httpResponse = await this.controller.handle(httpRequest)
+
+    return httpResponse
   }
 }
