@@ -1,4 +1,5 @@
 import { AddAccountRepository } from '@/data/contracts/add-account-repository'
+import { AddAccountModel } from '@/domain/usecases/add-account'
 import { MongooseAddAccount } from '@/infra/database/mongoose/add-account'
 import { mongooseAccountModel } from '@/infra/database/mongoose/schemas/account'
 import { faker } from '@faker-js/faker'
@@ -11,6 +12,14 @@ function makeSut(): SutTypes {
   const sut = new MongooseAddAccount()
   return {
     sut
+  }
+}
+
+function makeFakeAccount(): AddAccountModel {
+  return {
+    name: faker.name.findName(),
+    email: faker.internet.email(),
+    password: faker.internet.password()
   }
 }
 
@@ -31,11 +40,7 @@ describe('MongooseAddAccount', () => {
     const { sut } = makeSut()
 
     const fakeId = faker.datatype.uuid()
-    const fakeAccount = {
-      name: faker.name.findName(),
-      email: faker.internet.email(),
-      password: faker.internet.password()
-    }
+    const fakeAccount = makeFakeAccount()
 
     const createSpy = (mongooseAccountModel.create = jest
       .fn()
@@ -51,11 +56,7 @@ describe('MongooseAddAccount', () => {
     const { sut } = makeSut()
 
     const fakeId = faker.datatype.uuid()
-    const fakeAccount = {
-      name: faker.name.findName(),
-      email: faker.internet.email(),
-      password: faker.internet.password()
-    }
+    const fakeAccount = makeFakeAccount()
 
     mongooseAccountModel.create = jest
       .fn()
@@ -72,11 +73,7 @@ describe('MongooseAddAccount', () => {
   it('should throw if create throws', async () => {
     const { sut } = makeSut()
 
-    const fakeAccount = {
-      name: faker.name.findName(),
-      email: faker.internet.email(),
-      password: faker.internet.password()
-    }
+    const fakeAccount = makeFakeAccount()
 
     mongooseAccountModel.create = jest.fn().mockImplementationOnce(async () => {
       throw new Error()
