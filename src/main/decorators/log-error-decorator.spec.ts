@@ -20,14 +20,15 @@ function makeHttpRequest(): httpRequest {
   }
 }
 
+const fakeHttpResponse = {
+  statusCode: 200,
+  body: {
+    name: faker.name.findName()
+  }
+}
 class ControllerStub implements Controller {
   async handle(httpRequest: httpRequest): Promise<httpResponse> {
-    return {
-      statusCode: 200,
-      body: {
-        name: faker.name.findName()
-      }
-    }
+    return fakeHttpResponse
   }
 }
 
@@ -62,5 +63,14 @@ describe('LogErrorDecoratorController', () => {
 
     expect(handleSpy).toHaveBeenCalledTimes(1)
     expect(handleSpy).toHaveBeenCalledWith(httpRequest)
+  })
+
+  it('should return a httpResponse on success', async () => {
+    const { sut } = makeSut()
+
+    const httpRequest = makeHttpRequest()
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(fakeHttpResponse)
   })
 })
