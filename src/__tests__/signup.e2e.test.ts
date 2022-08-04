@@ -1,15 +1,17 @@
+import { mongooseHelper } from '@/infra/database/mongoose/helpers/mongoose-helper'
 import { app } from '@/main/config/app'
-import testSetup from '@/__tests__/setup'
 import { faker } from '@faker-js/faker'
 import request from 'supertest'
 
 describe('Signup endToEnd', () => {
   beforeAll(async () => {
-    await testSetup.connect()
+    await mongooseHelper.connect(
+      'mongodb://localhost:27017/node-clean-api-test'
+    )
   })
 
   afterAll(async () => {
-    await testSetup.disconnect()
+    await mongooseHelper.disconnect()
   })
 
   it('should return 200 on success', async () => {

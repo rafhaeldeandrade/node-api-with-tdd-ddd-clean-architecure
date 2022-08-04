@@ -1,11 +1,11 @@
+import { mongooseHelper } from '@/infra/database/mongoose/helpers/mongoose-helper'
 import { app } from '@/main/config/app'
 import env from '@/main/config/env'
-import mongoose from 'mongoose'
 
 const PORT = env.apiPort
 const MONGO_URL = env.mongoUrl
 
-mongoose
+mongooseHelper
   .connect(MONGO_URL)
   .then(() =>
     app.listen(PORT, () => {
