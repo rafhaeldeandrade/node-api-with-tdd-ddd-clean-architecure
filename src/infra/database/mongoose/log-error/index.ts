@@ -1,7 +1,8 @@
 import { LogErrorRepository } from '@/data/contracts/log-error-repository'
+import { mongooseLogModel } from '@/infra/database/mongoose/schemas/log'
 
 export class MongooseLogError implements LogErrorRepository {
   async logError(stack: string): Promise<void> {
-    console.log(stack)
+    await mongooseLogModel.create({ stack })
   }
 }
