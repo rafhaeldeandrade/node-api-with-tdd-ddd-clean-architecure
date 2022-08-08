@@ -4,7 +4,10 @@ import { ServerError } from '@/presentation/errors/server-error'
 export function badRequest(error: Error): httpResponse {
   return {
     statusCode: 400,
-    body: error
+    body: {
+      type: error.name,
+      message: error.message
+    }
   }
 }
 

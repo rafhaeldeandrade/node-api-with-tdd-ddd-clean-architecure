@@ -71,12 +71,15 @@ describe('SignupController', () => {
     } = httpRequest
     const promise = await sut.handle({ body: httpRequestParams } as any)
 
-    const httpResponse = {
-      statusCode: 400,
-      body: new MissingParamError('name')
-    }
+    const httpResponse = new MissingParamError('name')
 
-    expect(promise).toEqual(httpResponse)
+    expect(promise).toEqual({
+      body: {
+        type: httpResponse.name,
+        message: httpResponse.message
+      },
+      statusCode: 400
+    })
   })
 
   it('should return status 400 when email is not provided', async () => {
@@ -87,12 +90,15 @@ describe('SignupController', () => {
     } = httpRequest
     const promise = await sut.handle({ body: httpRequestParams } as any)
 
-    const httpResponse = {
-      statusCode: 400,
-      body: new MissingParamError('email')
-    }
+    const httpResponse = new MissingParamError('email')
 
-    expect(promise).toEqual(httpResponse)
+    expect(promise).toEqual({
+      body: {
+        type: httpResponse.name,
+        message: httpResponse.message
+      },
+      statusCode: 400
+    })
   })
 
   it('should return status 400 when password is not provided', async () => {
@@ -103,12 +109,15 @@ describe('SignupController', () => {
     } = httpRequest
     const promise = await sut.handle({ body: httpRequestParams } as any)
 
-    const httpResponse = {
-      statusCode: 400,
-      body: new MissingParamError('password')
-    }
+    const httpResponse = new MissingParamError('password')
 
-    expect(promise).toEqual(httpResponse)
+    expect(promise).toEqual({
+      body: {
+        type: httpResponse.name,
+        message: httpResponse.message
+      },
+      statusCode: 400
+    })
   })
 
   it('should return status 400 when passwordConfirmation is not provided', async () => {
@@ -119,12 +128,15 @@ describe('SignupController', () => {
     } = httpRequest
     const promise = await sut.handle({ body: httpRequestParams } as any)
 
-    const httpResponse = {
-      statusCode: 400,
-      body: new MissingParamError('passwordConfirmation')
-    }
+    const httpResponse = new MissingParamError('passwordConfirmation')
 
-    expect(promise).toEqual(httpResponse)
+    expect(promise).toEqual({
+      body: {
+        type: httpResponse.name,
+        message: httpResponse.message
+      },
+      statusCode: 400
+    })
   })
 
   it('should return 400 when password is different from passwordConfirmation', async () => {
@@ -141,12 +153,15 @@ describe('SignupController', () => {
       }
     } as any)
 
-    const httpResponse = {
-      statusCode: 400,
-      body: new InvalidParamError('passwordConfirmation')
-    }
+    const httpResponse = new InvalidParamError('passwordConfirmation')
 
-    expect(promise).toEqual(httpResponse)
+    expect(promise).toEqual({
+      body: {
+        type: httpResponse.name,
+        message: httpResponse.message
+      },
+      statusCode: 400
+    })
   })
 
   it('should calls emailValidator with the correct params', async () => {
@@ -165,12 +180,15 @@ describe('SignupController', () => {
 
     const result = await sut.handle(httpRequest)
 
-    const httpResponse = {
-      statusCode: 400,
-      body: new InvalidParamError('email')
-    }
+    const httpResponse = new InvalidParamError('email')
 
-    expect(result).toEqual(httpResponse)
+    expect(result).toEqual({
+      body: {
+        type: httpResponse.name,
+        message: httpResponse.message
+      },
+      statusCode: 400
+    })
   })
 
   it('should return 500 if some external lib crashes', async () => {
