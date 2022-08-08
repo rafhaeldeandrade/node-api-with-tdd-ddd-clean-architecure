@@ -4,8 +4,11 @@ import { MongooseAddAccount } from '@/infra/database/mongoose/add-account'
 import { SignupController } from '@/presentation/controllers/signup'
 import { EmailValidatorAdapter } from '@/utils/email-validator'
 import argon2 from 'argon2'
+import { LogErrorDecoratorController } from '@/main/decorators/log-error-decorator'
+import { MongooseLogError } from '@/infra/database/mongoose/log-error'
+import { Controller } from '@/presentation/contracts/controller'
 
-export function makeSignupController(): SignupController {
+export function makeSignupController(): Controller {
   const argon2Options = {
     type: argon2.argon2id,
     memoryCost: 37888,
@@ -16,5 +19,7 @@ export function makeSignupController(): SignupController {
   const argon2Adapter = new Argon2Adapter(argon2Options)
   const mongooseAddAccount = new MongooseAddAccount()
   const dbAddAccount = new DbAddAccount(argon2Adapter, mongooseAddAccount)
-  return new SignupController(emailValidator, dbAddAccount)
+  const mongooseLogError = new MongooseLogError()
+  const signupController = new SignupController(emailValidator, dbAddAccount)
+  return new LogErrorDecoratorController(signupController, mongooseLogError)
 }
