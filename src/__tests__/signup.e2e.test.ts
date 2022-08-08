@@ -25,7 +25,6 @@ describe('Signup endToEnd', () => {
 
     const response = await request(app).post('/api/signup').send(account)
 
-    console.log(response.body)
     expect(response.statusCode).toBe(200)
     expect(response.body.name).toBe(account.name)
     expect(response.body.email).toBe(account.email)
