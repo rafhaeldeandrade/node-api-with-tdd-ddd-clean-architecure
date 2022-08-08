@@ -9,7 +9,7 @@ export async function setupRoutes(app: Express): Promise<void> {
   const files = fs.readdirSync(path.resolve(__dirname, '../routes'))
 
   files.map(async (file) => {
-    if (file.endsWith('.routes.ts')) {
+    if (file.endsWith('.routes.ts') || file.endsWith('.routes.js')) {
       const { default: route } = await import(`../routes/${file}`)
       route(router)
     }
