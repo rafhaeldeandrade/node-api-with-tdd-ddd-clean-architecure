@@ -2,7 +2,7 @@
 
 [Projeto do curso do Manguinho](https://www.udemy.com/course/tdd-com-mango/)
 
-Esse é um projeto cujo objetivo é criar uma API com uma arquitetura bem definida e desacoplada, utilizando TDD (programação orientada a testes) como metodologia de trabalho, Clean Architecture para fazer a distribuição de responsabilidades em camadas, sempre seguindo os princípios do SOLID e, sempre que possível, aplicando Design Patterns para resolver alguns problemas comuns.
+Esse é um projeto cujo objetivo é criar uma API com uma arquitetura bem definida e desacoplada, utilizando TDD (desenvolvimento guiado por teste) como metodologia de trabalho, Clean Architecture para fazer a distribuição de responsabilidades em camadas, sempre seguindo os princípios do SOLID e, sempre que possível, aplicando Design Patterns para resolver alguns problemas comuns.
 
 ## Tecnologias utilizadas
 
