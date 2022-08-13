@@ -1,2 +1,4 @@
 /* eslint-disable @typescript-eslint/no-extraneous-class */
-export class LoginController {}
+export class LoginController {
+  handle(): void {}
+}
