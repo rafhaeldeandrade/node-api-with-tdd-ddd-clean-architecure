@@ -1,2 +1,5 @@
-/* eslint-disable @typescript-eslint/no-extraneous-class */
-export class RequiredFieldValidation {}
+export class RequiredFieldValidation {
+  validate(input: any): Error | null {
+    return null
+  }
+}
