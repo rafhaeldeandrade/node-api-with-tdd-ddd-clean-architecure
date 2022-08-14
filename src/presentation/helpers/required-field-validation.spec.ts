@@ -6,4 +6,10 @@ describe('RequiredFieldValidation', () => {
 
     expect(sut).toBeDefined()
   })
+
+  it('should have a method called validate', () => {
+    const sut = new RequiredFieldValidation()
+
+    expect(sut.validate).toBeDefined()
+  })
 })
