@@ -5,6 +5,7 @@ import { LoginController } from '@/presentation/controllers/login'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import {
   badRequest,
+  ok,
   serverError,
   unauthorized
 } from '@/presentation/helpers/http-helper'
@@ -27,9 +28,10 @@ interface SutTypes {
   authenticationStub: Authentication
 }
 
+const fakeAccessToken = faker.datatype.uuid()
 class AuthenticationStub implements Authentication {
   async auth(params: AuthenticationModel): Promise<string> {
-    return faker.datatype.uuid()
+    return fakeAccessToken
   }
 }
 
@@ -166,5 +168,14 @@ describe('LoginController', () => {
     const promise = sut.handle(httpRequest)
 
     await expect(promise).resolves.toEqual(serverError(new Error()))
+  })
+
+  it('should return status 200 if valid credentials are provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest = fakeParams
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(ok({ accessToken: fakeAccessToken }))
   })
 })
