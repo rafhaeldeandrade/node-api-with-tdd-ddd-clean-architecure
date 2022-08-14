@@ -3,8 +3,15 @@ import { faker } from '@faker-js/faker'
 import { EmailValidator } from '@/presentation/contracts/email-validator'
 import { LoginController } from '@/presentation/controllers/login'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
-import { badRequest } from '@/presentation/helpers/http-helper'
+import { badRequest, serverError } from '@/presentation/helpers/http-helper'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
+
+const fakeProps = {
+  body: {
+    email: faker.internet.email(),
+    password: faker.internet.password()
+  }
+}
 
 interface SutTypes {
   sut: LoginController
@@ -90,5 +97,17 @@ describe('LoginController', () => {
     const httpResponse = sut.handle(httpRequest)
 
     expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
+  })
+
+  it('should return status 500 if emailValidator throws', () => {
+    const { sut, emailValidatorStub } = makeSut()
+    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpRequest = fakeProps
+
+    const httpResponse = sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
