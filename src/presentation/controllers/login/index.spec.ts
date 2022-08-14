@@ -3,7 +3,11 @@ import { faker } from '@faker-js/faker'
 import { EmailValidator } from '@/presentation/contracts/email-validator'
 import { LoginController } from '@/presentation/controllers/login'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
-import { badRequest, serverError } from '@/presentation/helpers/http-helper'
+import {
+  badRequest,
+  serverError,
+  unauthorized
+} from '@/presentation/helpers/http-helper'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import {
   Authentication,
@@ -138,5 +142,17 @@ describe('LoginController', () => {
 
     expect(authSpy).toHaveBeenCalledTimes(1)
     expect(authSpy).toHaveBeenCalledWith(fakeParams.body)
+  })
+
+  it('should return status 401 if user credentials are invalid', async () => {
+    const { sut, authenticationStub } = makeSut()
+    jest
+      .spyOn(authenticationStub, 'auth')
+      .mockImplementationOnce(async () => null as any)
+    const httpRequest = fakeParams
+
+    const promise = sut.handle(httpRequest)
+
+    await expect(promise).resolves.toEqual(unauthorized())
   })
 })
