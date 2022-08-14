@@ -3,9 +3,9 @@ import { faker } from '@faker-js/faker'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import { EmailValidator } from '@/presentation/contracts/email-validator'
-import { ServerError } from '@/presentation/errors/server-error'
 import { AccountModel } from '@/domain/models/account'
 import { AddAccountModel, AddAccount } from '@/domain/usecases/add-account'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http-helper'
 
 interface makeSutInterface {
   sut: SignupController
@@ -65,87 +65,57 @@ describe('SignupController', () => {
 
   it('should return status 400 when name is not provided', async () => {
     const { sut } = makeSut()
-
     const {
       body: { name, ...httpRequestParams }
     } = httpRequest
-    const promise = await sut.handle({ body: httpRequestParams } as any)
 
-    const httpResponse = new MissingParamError('name')
+    const httpResponse = await sut.handle({ body: httpRequestParams } as any)
 
-    expect(promise).toEqual({
-      body: {
-        type: httpResponse.name,
-        message: httpResponse.message
-      },
-      statusCode: 400
-    })
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('name')))
   })
 
   it('should return status 400 when email is not provided', async () => {
     const { sut } = makeSut()
-
     const {
       body: { email, ...httpRequestParams }
     } = httpRequest
-    const promise = await sut.handle({ body: httpRequestParams } as any)
 
-    const httpResponse = new MissingParamError('email')
+    const httpResponse = await sut.handle({ body: httpRequestParams } as any)
 
-    expect(promise).toEqual({
-      body: {
-        type: httpResponse.name,
-        message: httpResponse.message
-      },
-      statusCode: 400
-    })
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
   })
 
   it('should return status 400 when password is not provided', async () => {
     const { sut } = makeSut()
-
     const {
       body: { password, ...httpRequestParams }
     } = httpRequest
-    const promise = await sut.handle({ body: httpRequestParams } as any)
 
-    const httpResponse = new MissingParamError('password')
+    const httpResponse = await sut.handle({ body: httpRequestParams } as any)
 
-    expect(promise).toEqual({
-      body: {
-        type: httpResponse.name,
-        message: httpResponse.message
-      },
-      statusCode: 400
-    })
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
   })
 
   it('should return status 400 when passwordConfirmation is not provided', async () => {
     const { sut } = makeSut()
-
     const {
       body: { passwordConfirmation, ...httpRequestParams }
     } = httpRequest
-    const promise = await sut.handle({ body: httpRequestParams } as any)
 
-    const httpResponse = new MissingParamError('passwordConfirmation')
+    const httpResponse = await sut.handle({ body: httpRequestParams } as any)
 
-    expect(promise).toEqual({
-      body: {
-        type: httpResponse.name,
-        message: httpResponse.message
-      },
-      statusCode: 400
-    })
+    expect(httpResponse).toEqual(
+      badRequest(new MissingParamError('passwordConfirmation'))
+    )
   })
 
   it('should return 400 when password is different from passwordConfirmation', async () => {
     const { sut } = makeSut()
-
     const {
       body: { password, passwordConfirmation, ...httpRequestParams }
     } = httpRequest
-    const promise = await sut.handle({
+
+    const httpResponse = await sut.handle({
       body: {
         ...httpRequestParams,
         password: faker.internet.password(4),
@@ -153,15 +123,9 @@ describe('SignupController', () => {
       }
     } as any)
 
-    const httpResponse = new InvalidParamError('passwordConfirmation')
-
-    expect(promise).toEqual({
-      body: {
-        type: httpResponse.name,
-        message: httpResponse.message
-      },
-      statusCode: 400
-    })
+    expect(httpResponse).toEqual(
+      badRequest(new InvalidParamError('passwordConfirmation'))
+    )
   })
 
   it('should calls emailValidator with the correct params', async () => {
@@ -175,37 +139,22 @@ describe('SignupController', () => {
 
   it('should return 400 if email provided is not valid', async () => {
     const { sut, emailValidatorStub } = makeSut()
-
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
 
-    const result = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
 
-    const httpResponse = new InvalidParamError('email')
-
-    expect(result).toEqual({
-      body: {
-        type: httpResponse.name,
-        message: httpResponse.message
-      },
-      statusCode: 400
-    })
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
   })
 
   it('should return 500 if some external lib crashes', async () => {
     const { sut, emailValidatorStub } = makeSut()
-
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
       throw new Error()
     })
 
-    const result = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
 
-    const httpResponse = {
-      statusCode: 500,
-      body: new ServerError('')
-    }
-
-    expect(result).toEqual(httpResponse)
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   it('should calls addAccountUseCase with correct params', async () => {
@@ -225,23 +174,18 @@ describe('SignupController', () => {
 
   it('should return 200 when everything works', async () => {
     const { sut, addAccountStub } = makeSut()
-
     const mockAddResult = {
       id: faker.datatype.uuid(),
       name: httpRequest.body.name,
       email: httpRequest.body.email,
       password: httpRequest.body.password
     }
-
     jest
       .spyOn(addAccountStub, 'add')
       .mockImplementationOnce(async () => mockAddResult)
 
-    const result = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
 
-    expect(result).toEqual({
-      statusCode: 200,
-      body: mockAddResult
-    })
+    expect(httpResponse).toEqual(ok(mockAddResult))
   })
 })

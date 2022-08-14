@@ -9,10 +9,7 @@ export function badRequest(
 ): httpResponse {
   return {
     statusCode: 400,
-    body: {
-      type: error.name,
-      message: error.message
-    }
+    body: error
   }
 }
 
