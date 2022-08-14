@@ -24,4 +24,12 @@ describe('RequiredFieldValidation', () => {
 
     expect(error).toEqual(new MissingParamError(fakeFieldName))
   })
+
+  it('should return null if fieldName is in input', () => {
+    const sut = new RequiredFieldValidation(fakeFieldName)
+
+    const result = sut.validate({ [fakeFieldName]: faker.random.word() })
+
+    expect(result).toBe(null)
+  })
 })
