@@ -1,13 +1,25 @@
 import { httpResponse } from '@/presentation/contracts/http'
 import { ServerError } from '@/presentation/errors/server-error'
+import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
+import { MissingParamError } from '@/presentation/errors/missing-param-error'
+import { UnauthorizedError } from '@/presentation/errors/unauthorized-error'
 
-export function badRequest(error: Error): httpResponse {
+export function badRequest(
+  error: MissingParamError | InvalidParamError
+): httpResponse {
   return {
     statusCode: 400,
     body: {
       type: error.name,
       message: error.message
     }
+  }
+}
+
+export function unauthorized(): httpResponse {
+  return {
+    statusCode: 401,
+    body: new UnauthorizedError()
   }
 }
 
