@@ -7,7 +7,8 @@ import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import {
   badRequest,
   serverError,
-  unauthorized
+  unauthorized,
+  ok
 } from '@/presentation/helpers/http-helper'
 
 export class LoginController implements Controller {
@@ -25,10 +26,7 @@ export class LoginController implements Controller {
       if (!password) return badRequest(new MissingParamError('password'))
       const accessToken = await this.authentication.auth({ email, password })
       if (!accessToken) return unauthorized()
-      return {
-        statusCode: 200,
-        body: {}
-      }
+      return ok({ accessToken })
     } catch (error) {
       return serverError(error as Error)
     }
