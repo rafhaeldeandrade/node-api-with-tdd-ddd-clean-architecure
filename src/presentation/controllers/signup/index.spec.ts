@@ -6,11 +6,19 @@ import { EmailValidator } from '@/presentation/contracts/email-validator'
 import { AccountModel } from '@/domain/models/account'
 import { AddAccountModel, AddAccount } from '@/domain/usecases/add-account'
 import { badRequest, ok, serverError } from '@/presentation/helpers/http-helper'
+import { Validation } from '@/presentation/helpers/validation'
 
 interface makeSutInterface {
   sut: SignupController
   emailValidatorStub: EmailValidator
   addAccountStub: AddAccount
+  validationStub: ValidationStub
+}
+
+class ValidationStub implements Validation {
+  validate(input: any): Error | null {
+    return null
+  }
 }
 
 class EmailValidatorStub implements EmailValidator {
@@ -43,11 +51,16 @@ class AddAccountStub implements AddAccount {
 }
 
 function makeSut(): makeSutInterface {
+  const validationStub = new ValidationStub()
   const emailValidatorStub = new EmailValidatorStub()
   const addAccountStub = new AddAccountStub()
-  const sut = new SignupController(emailValidatorStub, addAccountStub)
+  const sut = new SignupController(
+    emailValidatorStub,
+    addAccountStub,
+    validationStub
+  )
 
-  return { sut, emailValidatorStub, addAccountStub }
+  return { sut, emailValidatorStub, addAccountStub, validationStub }
 }
 
 describe('SignupController', () => {
@@ -187,5 +200,15 @@ describe('SignupController', () => {
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse).toEqual(ok(mockAddResult))
+  })
+
+  it('should call validation with the correct param', async () => {
+    const { sut, validationStub } = makeSut()
+
+    const validateSpy = jest.spyOn(validationStub, 'validate')
+
+    await sut.handle(httpRequest)
+
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 })
