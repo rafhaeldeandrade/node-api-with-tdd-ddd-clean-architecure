@@ -3,7 +3,6 @@ import { Controller } from '@/presentation/contracts/controller'
 import { httpRequest, httpResponse } from '@/presentation/contracts/http'
 import { EmailValidator } from '@/presentation/contracts/email-validator'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
-import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import { badRequest, ok, serverError } from '@/presentation/helpers/http-helper'
 import { Validation } from '@/presentation/helpers/validation'
 
@@ -17,19 +16,6 @@ export class SignupController implements Controller {
   async handle(params: httpRequest): Promise<httpResponse> {
     try {
       this.validation.validate(params.body)
-      const requiredParams = [
-        'name',
-        'email',
-        'password',
-        'passwordConfirmation'
-      ]
-
-      for (const param of requiredParams) {
-        if (!params.body[param as keyof typeof params.body]) {
-          return badRequest(new MissingParamError(param))
-        }
-      }
-
       const { name, email, password, passwordConfirmation } = params.body
       if (password !== passwordConfirmation) {
         return badRequest(new InvalidParamError('passwordConfirmation'))

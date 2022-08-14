@@ -1,6 +1,5 @@
 import { SignupController } from '@/presentation/controllers/signup'
 import { faker } from '@faker-js/faker'
-import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import { EmailValidator } from '@/presentation/contracts/email-validator'
 import { AccountModel } from '@/domain/models/account'
@@ -74,52 +73,6 @@ describe('SignupController', () => {
     const { sut } = makeSut()
 
     expect(sut.handle).toBeDefined()
-  })
-
-  it('should return status 400 when name is not provided', async () => {
-    const { sut } = makeSut()
-    const {
-      body: { name, ...httpRequestParams }
-    } = httpRequest
-
-    const httpResponse = await sut.handle({ body: httpRequestParams } as any)
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('name')))
-  })
-
-  it('should return status 400 when email is not provided', async () => {
-    const { sut } = makeSut()
-    const {
-      body: { email, ...httpRequestParams }
-    } = httpRequest
-
-    const httpResponse = await sut.handle({ body: httpRequestParams } as any)
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
-  })
-
-  it('should return status 400 when password is not provided', async () => {
-    const { sut } = makeSut()
-    const {
-      body: { password, ...httpRequestParams }
-    } = httpRequest
-
-    const httpResponse = await sut.handle({ body: httpRequestParams } as any)
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
-  })
-
-  it('should return status 400 when passwordConfirmation is not provided', async () => {
-    const { sut } = makeSut()
-    const {
-      body: { passwordConfirmation, ...httpRequestParams }
-    } = httpRequest
-
-    const httpResponse = await sut.handle({ body: httpRequestParams } as any)
-
-    expect(httpResponse).toEqual(
-      badRequest(new MissingParamError('passwordConfirmation'))
-    )
   })
 
   it('should return 400 when password is different from passwordConfirmation', async () => {

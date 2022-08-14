@@ -1,12 +1,13 @@
+import argon2 from 'argon2'
 import { DbAddAccount } from '@/data/usecases/add-account/db-add-account'
 import { Argon2Adapter } from '@/infra/cryptography/argon2-adapter'
 import { MongooseAddAccount } from '@/infra/database/mongoose/add-account'
 import { SignupController } from '@/presentation/controllers/signup'
 import { EmailValidatorAdapter } from '@/utils/email-validator'
-import argon2 from 'argon2'
 import { LogErrorDecoratorController } from '@/main/decorators/log-error-decorator'
 import { MongooseLogError } from '@/infra/database/mongoose/log-error'
 import { Controller } from '@/presentation/contracts/controller'
+import { makeSignupValidationComposite } from '@/main/factories/makeSignupValidationComposite'
 
 export function makeSignupController(): Controller {
   const argon2Options = {
@@ -20,6 +21,10 @@ export function makeSignupController(): Controller {
   const mongooseAddAccount = new MongooseAddAccount()
   const dbAddAccount = new DbAddAccount(argon2Adapter, mongooseAddAccount)
   const mongooseLogError = new MongooseLogError()
-  const signupController = new SignupController(emailValidator, dbAddAccount)
+  const signupController = new SignupController(
+    emailValidator,
+    dbAddAccount,
+    makeSignupValidationComposite()
+  )
   return new LogErrorDecoratorController(signupController, mongooseLogError)
 }
