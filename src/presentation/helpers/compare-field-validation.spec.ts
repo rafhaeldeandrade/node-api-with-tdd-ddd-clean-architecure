@@ -1,4 +1,4 @@
-import { CompareFieldValidation } from './compare-field-validdation'
+import { CompareFieldValidation } from '@/presentation/helpers/compare-field-validdation'
 
 interface SutTypes {
   sut: CompareFieldValidation
@@ -16,5 +16,11 @@ describe('CompareFieldValidation', () => {
     const { sut } = makeSut()
 
     expect(sut).toBeDefined()
+  })
+
+  it('should have a method called validate', () => {
+    const { sut } = makeSut()
+
+    expect(sut.validate).toBeDefined()
   })
 })
