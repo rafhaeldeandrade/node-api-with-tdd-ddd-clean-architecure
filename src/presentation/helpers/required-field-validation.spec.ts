@@ -4,21 +4,32 @@ import { MissingParamError } from '@/presentation/errors/missing-param-error'
 
 const fakeFieldName = faker.random.word()
 
+interface SutTypes {
+  sut: RequiredFieldValidation
+}
+
+function makeSut(field: string): SutTypes {
+  const sut = new RequiredFieldValidation(field)
+  return {
+    sut
+  }
+}
+
 describe('RequiredFieldValidation', () => {
   it('should be defined', () => {
-    const sut = new RequiredFieldValidation(fakeFieldName)
+    const { sut } = makeSut(fakeFieldName)
 
     expect(sut).toBeDefined()
   })
 
   it('should have a method called validate', () => {
-    const sut = new RequiredFieldValidation(fakeFieldName)
+    const { sut } = makeSut(fakeFieldName)
 
     expect(sut.validate).toBeDefined()
   })
 
   it('should return MissingParamError if fieldName isnt in input', () => {
-    const sut = new RequiredFieldValidation(fakeFieldName)
+    const { sut } = makeSut(fakeFieldName)
 
     const error = sut.validate({})
 
@@ -26,7 +37,7 @@ describe('RequiredFieldValidation', () => {
   })
 
   it('should return null if fieldName is in input', () => {
-    const sut = new RequiredFieldValidation(fakeFieldName)
+    const { sut } = makeSut(fakeFieldName)
 
     const result = sut.validate({ [fakeFieldName]: faker.random.word() })
 
