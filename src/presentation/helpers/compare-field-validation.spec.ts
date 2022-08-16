@@ -30,12 +30,26 @@ describe('CompareFieldValidation', () => {
 
   it('should return InvalidParamError if fieldToCompareName isnt the same as fieldName', () => {
     const { sut } = makeSut(fakeFieldName, fakeToCompareName)
+    const fakeFieldNameValue = faker.datatype.number()
+    const fakeFieldToCompareNameValue = faker.datatype.number()
 
     const error = sut.validate({
-      [fakeFieldName]: 1,
-      [fakeToCompareName]: 2
+      [fakeFieldName]: fakeFieldNameValue,
+      [fakeToCompareName]: fakeFieldToCompareNameValue
     })
 
     expect(error).toEqual(new InvalidParamError(fakeToCompareName))
+  })
+
+  it("should return null if fieldName's value is equal to fieldToCompareName's value", () => {
+    const { sut } = makeSut(fakeFieldName, fakeToCompareName)
+    const fakeValue = faker.datatype.number()
+
+    const result = sut.validate({
+      [fakeFieldName]: fakeValue,
+      [fakeToCompareName]: fakeValue
+    })
+
+    expect(result).toBe(null)
   })
 })
