@@ -1,3 +1,4 @@
+import { CompareFieldValidation } from '@/presentation/helpers/compare-field-validdation'
 import { RequiredFieldValidation } from '@/presentation/helpers/required-field-validation'
 import { ValidationComposite } from '@/presentation/helpers/validation-composite'
 import { makeSignupValidationComposite } from './makeSignupValidationComposite'
@@ -19,6 +20,9 @@ describe('SignupValidationComposite', () => {
     for (const param of requiredParams) {
       validations.push(new RequiredFieldValidation(param))
     }
+    validations.push(
+      new CompareFieldValidation('password', 'passwordConfirmation')
+    )
 
     const validationComposite = ValidationComposite as jest.Mock
 
