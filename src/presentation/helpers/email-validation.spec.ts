@@ -56,4 +56,12 @@ describe('EmailValidation', () => {
 
     expect(result).toEqual(new InvalidParamError(fakeFieldName))
   })
+
+  it('should return null if email provided is valid', () => {
+    const { sut } = makeSut(fakeFieldName)
+
+    const result = sut.validate({ [fakeFieldName]: fakeEmail })
+
+    expect(result).toBe(null)
+  })
 })
