@@ -17,4 +17,10 @@ describe('EmailValidation', () => {
 
     expect(sut).toBeDefined()
   })
+
+  it('should have a method called validate', () => {
+    const { sut } = makeSut()
+
+    expect(sut.validate).toBeDefined()
+  })
 })
