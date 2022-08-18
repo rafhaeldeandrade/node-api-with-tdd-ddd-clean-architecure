@@ -3,8 +3,12 @@ import { faker } from '@faker-js/faker'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import { AccountModel } from '@/domain/models/account'
 import { AddAccountModel, AddAccount } from '@/domain/usecases/add-account'
-import { badRequest, ok, serverError } from '@/presentation/helpers/http-helper'
-import { Validation } from '@/presentation/helpers/validation'
+import {
+  badRequest,
+  ok,
+  serverError
+} from '@/presentation/helpers/http/http-helper'
+import { Validation } from '@/presentation/contracts/validation'
 
 class ValidationStub implements Validation {
   validate(input: any): Error | null {

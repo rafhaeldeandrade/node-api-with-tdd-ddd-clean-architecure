@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
-import { MissingParamError } from '../errors/missing-param-error'
-import { Validation } from './validation'
+import { MissingParamError } from '@/presentation/errors/missing-param-error'
+import { Validation } from '@/presentation/contracts/validation'
 import { ValidationComposite } from './validation-composite'
 
 class ValidationStub implements Validation {

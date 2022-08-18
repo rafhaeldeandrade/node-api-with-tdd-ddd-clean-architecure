@@ -1,6 +1,6 @@
-import { CompareFieldValidation } from '@/presentation/helpers/compare-field-validdation'
+import { CompareFieldValidation } from '@/presentation/helpers/validators/compare-field-validdation'
 import { faker } from '@faker-js/faker'
-import { InvalidParamError } from '../errors/invalid-param-error'
+import { InvalidParamError } from '../../errors/invalid-param-error'
 
 interface SutTypes {
   sut: CompareFieldValidation

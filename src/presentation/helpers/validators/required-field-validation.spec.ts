@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { RequiredFieldValidation } from '@/presentation/helpers/required-field-validation'
+import { RequiredFieldValidation } from '@/presentation/helpers/validators/required-field-validation'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
 
 const fakeFieldName = faker.random.word()

@@ -1,7 +1,8 @@
+import request from 'supertest'
+import { faker } from '@faker-js/faker'
+
 import { mongooseHelper } from '@/infra/database/mongoose/helpers/mongoose-helper'
 import { app } from '@/main/config/app'
-import { faker } from '@faker-js/faker'
-import request from 'supertest'
 
 describe('Signup endToEnd', () => {
   beforeAll(async () => {

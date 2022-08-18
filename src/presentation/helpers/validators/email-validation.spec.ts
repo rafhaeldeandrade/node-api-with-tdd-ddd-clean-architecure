@@ -1,4 +1,4 @@
-import { EmailValidation } from '@/presentation/helpers/email-validation'
+import { EmailValidation } from '@/presentation/helpers/validators/email-validation'
 import { EmailValidator } from '@/presentation/contracts/email-validator'
 import { faker } from '@faker-js/faker'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'

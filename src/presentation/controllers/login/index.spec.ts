@@ -6,13 +6,13 @@ import {
   ok,
   serverError,
   unauthorized
-} from '@/presentation/helpers/http-helper'
+} from '@/presentation/helpers/http/http-helper'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import {
   Authentication,
   AuthenticationModel
 } from '@/domain/usecases/authentication'
-import { Validation } from '@/presentation/helpers/validation'
+import { Validation } from '@/presentation/contracts/validation'
 
 class ValidationStub implements Validation {
   validate(input: any): Error | null {

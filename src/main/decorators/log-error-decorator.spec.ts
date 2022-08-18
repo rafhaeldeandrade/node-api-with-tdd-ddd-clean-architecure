@@ -2,7 +2,7 @@ import { LogErrorRepository } from '@/data/contracts/log-error-repository'
 import { LogErrorDecoratorController } from '@/main/decorators/log-error-decorator'
 import { Controller } from '@/presentation/contracts/controller'
 import { httpRequest, httpResponse } from '@/presentation/contracts/http'
-import { serverError } from '@/presentation/helpers/http-helper'
+import { serverError } from '@/presentation/helpers/http/http-helper'
 import { faker } from '@faker-js/faker'
 
 const fakePassword = faker.internet.password()
