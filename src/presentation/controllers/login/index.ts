@@ -10,15 +10,18 @@ import {
   unauthorized,
   ok
 } from '@/presentation/helpers/http-helper'
+import { Validation } from '@/presentation/helpers/validation'
 
 export class LoginController implements Controller {
   constructor(
     private readonly emailValidator: EmailValidator,
-    private readonly authentication: Authentication
+    private readonly authentication: Authentication,
+    private readonly validation: Validation
   ) {}
 
   async handle(httpRequest: httpRequest): Promise<httpResponse> {
     try {
+      this.validation.validate(httpRequest.body)
       const emailIsValid = this.emailValidator.isValid(httpRequest.body.email)
       if (!emailIsValid) return badRequest(new InvalidParamError('email'))
       const { email, password } = httpRequest.body
