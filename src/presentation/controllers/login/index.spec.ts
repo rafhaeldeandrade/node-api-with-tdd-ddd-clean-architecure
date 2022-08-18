@@ -110,6 +110,17 @@ describe('LoginController', () => {
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('any_field')))
   })
 
+  it('should return 500 if validation throws', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
   it('should return status 400 if email isnt valid', async () => {
     const { sut, emailValidatorStub } = makeSut()
 
