@@ -6,7 +6,7 @@ import { SignupController } from '@/presentation/controllers/signup'
 import { LogErrorDecoratorController } from '@/main/decorators/log-error-decorator'
 import { MongooseLogError } from '@/infra/database/mongoose/log-error'
 import { Controller } from '@/presentation/contracts/controller'
-import { makeSignupValidationComposite } from '@/main/factories/makeSignupValidationComposite'
+import { makeSignupValidationComposite } from '@/main/factories/signup/makeSignupValidationComposite'
 
 export function makeSignupController(): Controller {
   const argon2Options = {
