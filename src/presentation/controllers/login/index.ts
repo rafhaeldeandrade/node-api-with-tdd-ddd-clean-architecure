@@ -21,7 +21,8 @@ export class LoginController implements Controller {
 
   async handle(httpRequest: httpRequest): Promise<httpResponse> {
     try {
-      this.validation.validate(httpRequest.body)
+      const error = this.validation.validate(httpRequest.body)
+      if (error) return badRequest(error)
       const emailIsValid = this.emailValidator.isValid(httpRequest.body.email)
       if (!emailIsValid) return badRequest(new InvalidParamError('email'))
       const { email, password } = httpRequest.body
