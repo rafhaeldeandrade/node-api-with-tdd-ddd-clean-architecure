@@ -1,7 +1,16 @@
-import { Authentication } from '@/domain/usecases/authentication'
+import { LoadAccountByEmailRepository } from '@/data/contracts/db/db-load-account-by-email-repository'
+import {
+  Authentication,
+  AuthenticationModel
+} from '@/domain/usecases/authentication'
 
 export class DbAuthentication implements Authentication {
-  async auth(): Promise<string> {
+  constructor(
+    private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository
+  ) {}
+
+  async auth(params: AuthenticationModel): Promise<string> {
+    await this.loadAccountByEmailRepository.load(params.email)
     return ''
   }
 }
