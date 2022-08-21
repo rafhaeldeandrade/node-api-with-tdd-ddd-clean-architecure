@@ -116,7 +116,7 @@ describe('DbAuthentication', () => {
     )
   })
 
-  it('should should throw if hashComparer throws', async () => {
+  it('should throw if hashComparer throws', async () => {
     const { sut, hashComparerStub } = makeSut()
     jest.spyOn(hashComparerStub, 'compare').mockRejectedValueOnce(new Error())
 
@@ -142,5 +142,16 @@ describe('DbAuthentication', () => {
 
     expect(generateSpy).toBeCalledTimes(1)
     expect(generateSpy).toHaveBeenCalledWith(fakeAccount.id)
+  })
+
+  it('should throw if tokenGenerator throws', async () => {
+    const { sut, tokenGeneratorStub } = makeSut()
+    jest
+      .spyOn(tokenGeneratorStub, 'generate')
+      .mockRejectedValueOnce(new Error())
+
+    const promise = sut.auth(fakeParams)
+
+    await expect(promise).rejects.toThrow()
   })
 })
