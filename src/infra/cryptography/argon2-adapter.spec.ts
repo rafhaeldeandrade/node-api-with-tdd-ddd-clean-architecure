@@ -1,10 +1,10 @@
-import { Encrypter } from '@/data/contracts/authentication/encrypter'
+import { Hasher } from '@/data/contracts/authentication/hasher'
 import { Argon2Adapter } from '@/infra/cryptography/argon2-adapter'
 import { faker } from '@faker-js/faker'
 import argon2 from 'argon2'
 
 interface SutTypes {
-  sut: Encrypter
+  sut: Hasher
 }
 
 function makeSut(options?: argon2.Options & { raw?: false }): SutTypes {
@@ -21,10 +21,10 @@ describe('Argon2Adapter', () => {
     expect(sut).toBeDefined()
   })
 
-  it('should have a method called encrypt', () => {
+  it('should have a method called hash', () => {
     const { sut } = makeSut()
 
-    expect(sut.encrypt).toBeDefined()
+    expect(sut.hash).toBeDefined()
   })
 
   it('should call argon2 with the correct params', async () => {
@@ -39,7 +39,7 @@ describe('Argon2Adapter', () => {
     const hashSpy = jest.spyOn(argon2, 'hash')
 
     const fakePassword = faker.internet.password()
-    await sut.encrypt(fakePassword)
+    await sut.hash(fakePassword)
 
     expect(hashSpy).toHaveBeenCalledWith(fakePassword, argon2Options)
   })
@@ -61,7 +61,7 @@ describe('Argon2Adapter', () => {
 
     const fakePassword = faker.internet.password()
 
-    const hash = await sut.encrypt(fakePassword)
+    const hash = await sut.hash(fakePassword)
 
     expect(hash).toBe(hashedPassword)
   })
@@ -81,7 +81,7 @@ describe('Argon2Adapter', () => {
     })
 
     const fakePassword = faker.internet.password()
-    const promise = sut.encrypt(fakePassword)
+    const promise = sut.hash(fakePassword)
 
     await expect(promise).rejects.toThrow()
   })
