@@ -1,5 +1,5 @@
 import { HashComparer } from '@/data/contracts/authentication/hash-comparer'
-import { TokenGenerator } from '@/data/contracts/authentication/token-generator'
+import { Encrypter } from '@/data/contracts/authentication/encrypter'
 import { LoadAccountByEmailRepository } from '@/data/contracts/db/db-load-account-by-email-repository'
 import { UpdateAccessTokenRepository } from '@/data/contracts/db/update-access-token-repository'
 import {
@@ -11,7 +11,7 @@ export class DbAuthentication implements Authentication {
   constructor(
     private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository,
     private readonly hashComparer: HashComparer,
-    private readonly tokenGenerator: TokenGenerator,
+    private readonly encrypter: Encrypter,
     private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
   ) {}
 
@@ -23,7 +23,7 @@ export class DbAuthentication implements Authentication {
       account.password
     )
     if (!hashIsValid) return null
-    const accessToken = await this.tokenGenerator.generate(account.id)
+    const accessToken = await this.encrypter.encrypt(account.id)
     await this.updateAccessTokenRepository.update(account.id, accessToken)
     return accessToken
   }
