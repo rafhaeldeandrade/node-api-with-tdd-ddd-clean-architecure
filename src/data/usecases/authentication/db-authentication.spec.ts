@@ -1,3 +1,4 @@
+import { HashComparer } from '@/data/contracts/authentication/hash-comparer'
 import { LoadAccountByEmailRepository } from '@/data/contracts/db/db-load-account-by-email-repository'
 import { DbAuthentication } from '@/data/usecases/authentication/db-authentication'
 import { AccountModel } from '@/domain/models/account'
@@ -10,6 +11,13 @@ const fakeAccount = {
   email: faker.internet.email(),
   password: fakePassword
 }
+
+class HashComparerStub implements HashComparer {
+  async compare(value: string, hash: string): Promise<boolean> {
+    return true
+  }
+}
+
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
   async load(email: string): Promise<AccountModel> {
     return fakeAccount
@@ -19,14 +27,20 @@ class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
 interface SutTypes {
   sut: DbAuthentication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
+  hashComparerStub: HashComparer
 }
 function makeSut(): SutTypes {
+  const hashComparerStub = new HashComparerStub()
   const loadAccountByEmailRepositoryStub =
     new LoadAccountByEmailRepositoryStub()
-  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub)
+  const sut = new DbAuthentication(
+    loadAccountByEmailRepositoryStub,
+    hashComparerStub
+  )
   return {
     sut,
-    loadAccountByEmailRepositoryStub
+    loadAccountByEmailRepositoryStub,
+    hashComparerStub
   }
 }
 
@@ -77,5 +91,17 @@ describe('DbAuthentication', () => {
     const accessToken = await sut.auth(fakeParams)
 
     expect(accessToken).toBeNull()
+  })
+
+  it('should call hashComparer if loadAccountByEmailRepository with the correct params if returns an account', async () => {
+    const { sut, hashComparerStub } = makeSut()
+    const compareSpy = jest.spyOn(hashComparerStub, 'compare')
+
+    await sut.auth(fakeParams)
+
+    expect(compareSpy).toHaveBeenCalledWith(
+      fakeParams.password,
+      fakeAccount.password
+    )
   })
 })
