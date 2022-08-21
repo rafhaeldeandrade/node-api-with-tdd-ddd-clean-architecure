@@ -1,4 +1,4 @@
-import { LogErrorRepository } from '@/data/contracts/log-error-repository'
+import { LogErrorRepository } from '@/data/contracts/db/log-error-repository'
 import { Controller } from '@/presentation/contracts/controller'
 import { httpRequest, httpResponse } from '@/presentation/contracts/http'
 

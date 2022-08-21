@@ -1,4 +1,4 @@
-import { Encrypter } from '@/data/contracts/encrypter'
+import { Encrypter } from '@/data/contracts/authentication/encrypter'
 import argon2 from 'argon2'
 
 export class Argon2Adapter implements Encrypter {

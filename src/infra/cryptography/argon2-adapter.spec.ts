@@ -1,4 +1,4 @@
-import { Encrypter } from '@/data/contracts/encrypter'
+import { Encrypter } from '@/data/contracts/authentication/encrypter'
 import { Argon2Adapter } from '@/infra/cryptography/argon2-adapter'
 import { faker } from '@faker-js/faker'
 import argon2 from 'argon2'

@@ -1,4 +1,4 @@
-import { AddAccountRepository } from '@/data/contracts/add-account-repository'
+import { AddAccountRepository } from '@/data/contracts/db/add-account-repository'
 import { AddAccountModel } from '@/domain/usecases/add-account'
 import { MongooseAddAccount } from '@/infra/database/mongoose/add-account'
 import { mongooseAccountModel } from '@/infra/database/mongoose/schemas/account'
