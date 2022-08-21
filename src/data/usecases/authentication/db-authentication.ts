@@ -1,3 +1,4 @@
+import { HashComparer } from '@/data/contracts/authentication/hash-comparer'
 import { LoadAccountByEmailRepository } from '@/data/contracts/db/db-load-account-by-email-repository'
 import {
   Authentication,
@@ -6,11 +7,15 @@ import {
 
 export class DbAuthentication implements Authentication {
   constructor(
-    private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository
+    private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository,
+    private readonly hashComparer: HashComparer
   ) {}
 
   async auth(params: AuthenticationModel): Promise<string | null> {
-    await this.loadAccountByEmailRepository.load(params.email)
+    const account = await this.loadAccountByEmailRepository.load(params.email)
+    if (account) {
+      await this.hashComparer.compare(params.password, account.password)
+    }
     return null
   }
 }
