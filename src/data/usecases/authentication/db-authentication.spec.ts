@@ -13,9 +13,10 @@ const fakeAccount = {
   password: fakePassword
 }
 
+const fakeAccessToken = faker.datatype.uuid()
 class TokenGeneratorStub implements TokenGenerator {
   async generate(accountId: string): Promise<string> {
-    return faker.datatype.uuid()
+    return fakeAccessToken
   }
 }
 
@@ -153,5 +154,13 @@ describe('DbAuthentication', () => {
     const promise = sut.auth(fakeParams)
 
     await expect(promise).rejects.toThrow()
+  })
+
+  it('should return a token on success', async () => {
+    const { sut } = makeSut()
+
+    const accessToken = await sut.auth(fakeParams)
+
+    expect(accessToken).toBe(fakeAccessToken)
   })
 })
