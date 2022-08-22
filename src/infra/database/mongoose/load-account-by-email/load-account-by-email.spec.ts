@@ -38,4 +38,13 @@ describe('MongooseLoadAccountByEmailRepository', () => {
       lean: true
     })
   })
+
+  it('should return null if findOne returns null', async () => {
+    const { sut } = makeSut()
+    jest.spyOn(mongooseAccountModel, 'findOne').mockResolvedValueOnce(null)
+
+    const promise = sut.load(fakeParams.email)
+
+    await expect(promise).resolves.toBeNull()
+  })
 })
