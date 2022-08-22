@@ -12,6 +12,13 @@ function makeSut(): SutTypes {
   }
 }
 
+const fakeAccount = {
+  id: faker.datatype.uuid(),
+  name: faker.name.findName(),
+  email: faker.internet.email(),
+  password: faker.internet.password()
+}
+
 const fakeParams = {
   email: faker.internet.email()
 }
@@ -57,5 +64,19 @@ describe('MongooseLoadAccountByEmailRepository', () => {
     const promise = sut.load(fakeParams.email)
 
     await expect(promise).rejects.toThrow()
+  })
+
+  it('should return an account on success', async () => {
+    const { sut } = makeSut()
+    jest.spyOn(mongooseAccountModel, 'findOne').mockResolvedValueOnce({
+      _id: fakeAccount.id,
+      name: fakeAccount.name,
+      email: fakeAccount.email,
+      password: fakeAccount.password
+    })
+
+    const promise = sut.load(fakeParams.email)
+
+    await expect(promise).resolves.toEqual(fakeAccount)
   })
 })
