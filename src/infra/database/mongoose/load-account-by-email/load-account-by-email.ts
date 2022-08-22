@@ -1,6 +1,15 @@
+import { LoadAccountByEmailRepository } from '@/data/contracts/db/db-load-account-by-email-repository'
+import { AccountModel } from '@/domain/models/account'
+import { mongooseAccountModel } from '@/infra/database/mongoose/schemas/account'
+
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class MongooseLoadAccountByEmail {
-  load(): any {
+export class MongooseLoadAccountByEmail
+  implements LoadAccountByEmailRepository
+{
+  async load(email: string): Promise<AccountModel | null> {
+    await mongooseAccountModel.findOne({ email }, null, {
+      lean: true
+    })
     return null
   }
 }
