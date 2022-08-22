@@ -1,10 +1,9 @@
-import { Hasher } from '@/data/contracts/authentication/hasher'
 import { Argon2Adapter } from '@/infra/cryptography/argon2-adapter'
 import { faker } from '@faker-js/faker'
 import argon2 from 'argon2'
 
 interface SutTypes {
-  sut: Hasher
+  sut: Argon2Adapter
 }
 
 function makeSut(options?: argon2.Options & { raw?: false }): SutTypes {
@@ -13,6 +12,13 @@ function makeSut(options?: argon2.Options & { raw?: false }): SutTypes {
   return {
     sut
   }
+}
+
+const argon2Options = {
+  type: argon2.argon2id,
+  memoryCost: 37888,
+  parallelism: 1,
+  timeCost: 2
 }
 
 describe('Argon2Adapter', () => {
@@ -27,13 +33,13 @@ describe('Argon2Adapter', () => {
     expect(sut.hash).toBeDefined()
   })
 
-  it('should call argon2 with the correct params', async () => {
-    const argon2Options = {
-      type: argon2.argon2id,
-      memoryCost: 37888,
-      parallelism: 1,
-      timeCost: 2
-    }
+  it('should have a method called compare', () => {
+    const { sut } = makeSut()
+
+    expect(sut.compare).toBeDefined()
+  })
+
+  it('should call argon2 when hash is called, with the correct params', async () => {
     const { sut } = makeSut(argon2Options)
 
     const hashSpy = jest.spyOn(argon2, 'hash')
@@ -44,14 +50,7 @@ describe('Argon2Adapter', () => {
     expect(hashSpy).toHaveBeenCalledWith(fakePassword, argon2Options)
   })
 
-  it('should return a hash on success', async () => {
-    const argon2Options = {
-      type: argon2.argon2id,
-      memoryCost: 37888,
-      parallelism: 1,
-      timeCost: 2
-    }
-
+  it('should return a hash when hash is called on success', async () => {
     const { sut } = makeSut(argon2Options)
 
     const hashedPassword = faker.datatype.uuid()
@@ -67,13 +66,6 @@ describe('Argon2Adapter', () => {
   })
 
   it('should throw an error if argon2 throws', async () => {
-    const argon2Options = {
-      type: argon2.argon2id,
-      memoryCost: 37888,
-      parallelism: 1,
-      timeCost: 2
-    }
-
     const { sut } = makeSut(argon2Options)
 
     jest.spyOn(argon2, 'hash').mockImplementationOnce(async () => {
