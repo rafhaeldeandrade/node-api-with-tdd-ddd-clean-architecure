@@ -7,9 +7,15 @@ export class MongooseLoadAccountByEmail
   implements LoadAccountByEmailRepository
 {
   async load(email: string): Promise<AccountModel | null> {
-    await mongooseAccountModel.findOne({ email }, null, {
+    const account = await mongooseAccountModel.findOne({ email }, null, {
       lean: true
     })
-    return null
+    if (!account) return null
+    return {
+      id: account._id.toString(),
+      name: account.name,
+      email: account.email,
+      password: account.password
+    }
   }
 }
