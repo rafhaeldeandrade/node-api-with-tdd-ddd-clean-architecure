@@ -50,6 +50,22 @@ describe('Argon2Adapter', () => {
     expect(hashSpy).toHaveBeenCalledWith(fakePassword, argon2Options)
   })
 
+  it('should call argon2 when compare is called, with the correct params', async () => {
+    const { sut } = makeSut(argon2Options)
+
+    const verifySpy = jest.spyOn(argon2, 'verify').mockResolvedValueOnce(true)
+
+    const fakePassword = faker.internet.password()
+    const fakePasswordHash = faker.datatype.hexadecimal(10)
+    await sut.compare(fakePassword, fakePasswordHash)
+
+    expect(verifySpy).toHaveBeenCalledWith(
+      fakePasswordHash,
+      fakePassword,
+      argon2Options
+    )
+  })
+
   it('should return a hash when hash is called on success', async () => {
     const { sut } = makeSut(argon2Options)
 
