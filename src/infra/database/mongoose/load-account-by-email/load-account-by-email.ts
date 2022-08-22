@@ -1,4 +1,4 @@
-import { LoadAccountByEmailRepository } from '@/data/contracts/db/db-load-account-by-email-repository'
+import { LoadAccountByEmailRepository } from '@/data/contracts/db/load-account-by-email-repository'
 import { AccountModel } from '@/domain/models/account'
 import { mongooseAccountModel } from '@/infra/database/mongoose/schemas/account'
 

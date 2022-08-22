@@ -1,6 +1,6 @@
 import { HashComparer } from '@/data/contracts/authentication/hash-comparer'
 import { Encrypter } from '@/data/contracts/authentication/encrypter'
-import { LoadAccountByEmailRepository } from '@/data/contracts/db/db-load-account-by-email-repository'
+import { LoadAccountByEmailRepository } from '@/data/contracts/db/load-account-by-email-repository'
 import { UpdateAccessTokenRepository } from '@/data/contracts/db/update-access-token-repository'
 import { DbAuthentication } from '@/data/usecases/authentication/db-authentication'
 import { AccountModel } from '@/domain/models/account'
