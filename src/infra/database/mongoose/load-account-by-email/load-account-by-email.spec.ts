@@ -47,4 +47,15 @@ describe('MongooseLoadAccountByEmailRepository', () => {
 
     await expect(promise).resolves.toBeNull()
   })
+
+  it('should throw if mongooseAccountModel throws', async () => {
+    const { sut } = makeSut()
+    jest
+      .spyOn(mongooseAccountModel, 'findOne')
+      .mockRejectedValueOnce(new Error())
+
+    const promise = sut.load(fakeParams.email)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
