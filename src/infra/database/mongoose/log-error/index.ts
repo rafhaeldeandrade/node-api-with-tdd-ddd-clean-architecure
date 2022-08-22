@@ -1,4 +1,4 @@
-import { LogErrorRepository } from '@/data/contracts/db/log-error-repository'
+import { LogErrorRepository } from '@/data/contracts/database/log-error-repository'
 import { mongooseLogModel } from '@/infra/database/mongoose/schemas/log'
 
 export class MongooseLogError implements LogErrorRepository {

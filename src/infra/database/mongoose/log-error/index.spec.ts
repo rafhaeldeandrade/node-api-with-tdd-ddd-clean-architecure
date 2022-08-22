@@ -1,4 +1,4 @@
-import { LogErrorRepository } from '@/data/contracts/db/log-error-repository'
+import { LogErrorRepository } from '@/data/contracts/database/log-error-repository'
 import { MongooseLogError } from '@/infra/database/mongoose/log-error'
 import { mongooseLogModel } from '@/infra/database/mongoose/schemas/log'
 import { faker } from '@faker-js/faker'
