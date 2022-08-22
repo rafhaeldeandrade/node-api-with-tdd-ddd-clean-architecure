@@ -81,7 +81,7 @@ describe('Argon2Adapter', () => {
     expect(hash).toBe(hashedPassword)
   })
 
-  it('should throw an error if argon2 throws', async () => {
+  it('should throw an error if argon2 throws when hash is called', async () => {
     const { sut } = makeSut(argon2Options)
 
     jest.spyOn(argon2, 'hash').mockImplementationOnce(async () => {
@@ -90,6 +90,20 @@ describe('Argon2Adapter', () => {
 
     const fakePassword = faker.internet.password()
     const promise = sut.hash(fakePassword)
+
+    await expect(promise).rejects.toThrow()
+  })
+
+  it('should throw an error if argon2 throws when compare is called', async () => {
+    const { sut } = makeSut(argon2Options)
+
+    jest.spyOn(argon2, 'verify').mockImplementationOnce(async () => {
+      throw new Error()
+    })
+
+    const fakePassword = faker.internet.password()
+    const fakePasswordHash = faker.internet.password()
+    const promise = sut.compare(fakePassword, fakePasswordHash)
 
     await expect(promise).rejects.toThrow()
   })
