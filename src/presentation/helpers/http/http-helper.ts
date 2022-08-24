@@ -23,7 +23,7 @@ export function unauthorized(): httpResponse {
 export function serverError(error: Error): httpResponse {
   return {
     statusCode: 500,
-    body: new ServerError(error?.stack as string)
+    body: new ServerError(error.stack as string)
   }
 }
 
