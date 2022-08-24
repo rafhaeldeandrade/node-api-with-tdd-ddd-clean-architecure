@@ -25,10 +25,18 @@ describe('JwtAdapter', () => {
     expect(sut.encrypt).toBeDefined()
   })
 
-  it('should call jwt.sign with correct params when encrypt method is invoked', async () => {
+  it('should call jwt.sign with correct params when encrypt method is invoked', () => {
     const { sut } = makeSut()
     const jwtSpy = jest.spyOn(jwt, 'sign')
-    await sut.encrypt(fakeValue)
+    sut.encrypt(fakeValue)
     expect(jwtSpy).toHaveBeenCalledWith(fakeValue, fakeJwtSecret)
+  })
+
+  it('should throw if jwt.sign throws when encrypt method is invoked', async () => {
+    const { sut } = makeSut()
+    jest.spyOn(jwt, 'sign').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    expect(() => sut.encrypt(fakeValue)).toThrow()
   })
 })
