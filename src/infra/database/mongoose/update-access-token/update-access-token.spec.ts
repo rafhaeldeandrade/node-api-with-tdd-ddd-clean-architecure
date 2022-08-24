@@ -28,4 +28,14 @@ describe('MongooseUpdateAccessTokenRepository', () => {
       { $set: { accessToken } }
     )
   })
+
+  it('should throw if mongooseAccountModel.updateOne throws', async () => {
+    const sut = new MongooseUpdateAccessToken()
+    jest
+      .spyOn(mongooseAccountModel, 'updateOne')
+      .mockRejectedValueOnce(new Error())
+    const { accountId, accessToken } = fakeParams
+    const promise = sut.update(accountId, accessToken)
+    await expect(promise).rejects.toThrow()
+  })
 })
