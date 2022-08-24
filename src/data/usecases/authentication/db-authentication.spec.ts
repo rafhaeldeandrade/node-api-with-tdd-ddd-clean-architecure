@@ -22,7 +22,7 @@ class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
 
 const fakeAccessToken = faker.datatype.uuid()
 class EncrypterStub implements Encrypter {
-  async encrypt(accountId: string): Promise<string> {
+  encrypt(accountId: string): string {
     return fakeAccessToken
   }
 }
@@ -158,7 +158,9 @@ describe('DbAuthentication', () => {
 
   it('should throw if encrypter throws', async () => {
     const { sut, encrypterStub } = makeSut()
-    jest.spyOn(encrypterStub, 'encrypt').mockRejectedValueOnce(new Error())
+    jest.spyOn(encrypterStub, 'encrypt').mockImplementationOnce(() => {
+      throw new Error()
+    })
 
     const promise = sut.auth(fakeParams)
 
