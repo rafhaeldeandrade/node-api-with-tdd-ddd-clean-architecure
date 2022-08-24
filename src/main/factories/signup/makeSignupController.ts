@@ -1,6 +1,6 @@
 import argon2 from 'argon2'
 import { DbAddAccount } from '@/data/usecases/add-account/db-add-account'
-import { Argon2Adapter } from '@/infra/cryptography/argon2-adapter'
+import { Argon2Adapter } from '@/infra/cryptography/argon2/argon2-adapter'
 import { MongooseAddAccount } from '@/infra/database/mongoose/add-account'
 import { SignupController } from '@/presentation/controllers/signup'
 import { LogErrorDecoratorController } from '@/main/decorators/log-error-decorator'

@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker'
 
 import { mongooseHelper } from '@/infra/database/mongoose/helpers/mongoose-helper'
 import { app } from '@/main/config/app'
+import { mongooseAccountModel } from '@/infra/database/mongoose/schemas/account'
 
 describe('Signup endToEnd', () => {
   beforeAll(async () => {
@@ -12,6 +13,7 @@ describe('Signup endToEnd', () => {
   })
 
   afterAll(async () => {
+    await mongooseAccountModel.deleteMany({})
     await mongooseHelper.disconnect()
   })
 
