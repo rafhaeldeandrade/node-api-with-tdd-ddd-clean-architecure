@@ -1,4 +1,4 @@
-import { Argon2Adapter } from '@/infra/cryptography/argon2-adapter'
+import { Argon2Adapter } from '@/infra/cryptography/argon2/argon2-adapter'
 import { faker } from '@faker-js/faker'
 import argon2 from 'argon2'
 
