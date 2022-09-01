@@ -1,6 +1,8 @@
 import argon2 from 'argon2'
 import * as dotenv from 'dotenv'
-dotenv.config()
+dotenv.config({
+  path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env'
+})
 
 export default {
   mongoUrl: process.env.MONGO_URL ?? 'mongodb://localhost:27017/node-clean-api',
