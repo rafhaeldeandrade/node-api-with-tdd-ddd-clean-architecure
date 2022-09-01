@@ -1,15 +1,13 @@
 import request from 'supertest'
 import { faker } from '@faker-js/faker'
-
+import env from '@/main/config/env'
 import { mongooseHelper } from '@/infra/database/mongoose/helpers/mongoose-helper'
 import { app } from '@/main/config/app'
 import { mongooseAccountModel } from '@/infra/database/mongoose/schemas/account'
 
 describe('Signup endToEnd', () => {
   beforeAll(async () => {
-    await mongooseHelper.connect(
-      'mongodb://user_mongodb_59ea38b9ed:9b49c9d30fcfea691c728c9ef916adc4fdf2bf8d@h1.host.filess.io:27017/mongodb_19b2306cfc'
-    )
+    await mongooseHelper.connect(env.mongoUrl)
   })
 
   afterAll(async () => {
