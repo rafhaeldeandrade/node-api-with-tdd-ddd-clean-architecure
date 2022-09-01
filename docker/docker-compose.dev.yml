@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  api:
+    container_name: clean-api-server
+    build:
+      target: development
+    command: yarn dev
+    volumes:
+      - ../src:/usr/src/app/src
+
+networks:
+  clean-api-network:
+    driver: bridge

@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  clean-api:
+    container_name: clean-api-server
+    build:
+      context: ../
+      dockerfile: ./docker/dockerfile
+    ports:
+      - '4000:4000'
+  clean-api-db:
+    container_name: clean-api-mongo
+    image: 'mongo:4.4.0-bionic'
+    ports:
+      - '27018:27017'
+    volumes:
+      - '/Users/strkng/Mongo/Data:/data/db'
+
+networks:
+  clean-api-network:
+    driver: bridge
