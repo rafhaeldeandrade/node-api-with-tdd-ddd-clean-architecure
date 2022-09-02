@@ -8,6 +8,8 @@ services:
     command: yarn dev
     volumes:
       - ../src:/usr/src/app/src
+    networks:
+      - clean-api-network
 
 networks:
   clean-api-network:

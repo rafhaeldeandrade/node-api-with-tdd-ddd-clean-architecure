@@ -8,6 +8,8 @@ services:
       dockerfile: ./docker/dockerfile
     ports:
       - '4000:4000'
+    depends_on:
+      - clean-api-db
   clean-api-db:
     container_name: clean-api-mongo
     image: 'mongo:4.4.0-bionic'
@@ -15,6 +17,7 @@ services:
       - '27018:27017'
     volumes:
       - './data:/data/db'
+    restart: always
 
 networks:
   clean-api-network:
