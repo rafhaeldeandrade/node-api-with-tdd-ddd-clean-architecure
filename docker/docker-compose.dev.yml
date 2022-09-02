@@ -10,6 +10,14 @@ services:
       - ../src:/usr/src/app/src
     networks:
       - clean-api-network
+  clean-api-db:
+    container_name: clean-api-mongo
+    image: 'mongo:4.4.0-bionic'
+    ports:
+      - '27018:27017'
+    volumes:
+      - './data:/data/db'
+    restart: always
 
 networks:
   clean-api-network:
