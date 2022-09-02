@@ -14,7 +14,7 @@ services:
     ports:
       - '27018:27017'
     volumes:
-      - '/Users/strkng/Mongo/Data:/data/db'
+      - './data:/data/db'
 
 networks:
   clean-api-network:
