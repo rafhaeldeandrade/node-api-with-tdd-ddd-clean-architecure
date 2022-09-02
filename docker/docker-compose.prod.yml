@@ -5,3 +5,4 @@ services:
     container_name: clean-api-server
     build:
       target: production
+    command: yarn start

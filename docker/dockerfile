@@ -15,4 +15,4 @@ ENV NODE_ENV=production
 COPY --from=build /usr/src/app/dist /usr/src/app/dist
 COPY .env.production ./
 RUN yarn install --production
-CMD ["yarn", "start"]
+RUN yarn global add pm2
