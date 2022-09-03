@@ -94,6 +94,17 @@ describe('DbAddAccountUseCase', () => {
     expect(result).toBeNull()
   })
 
+  it('should throw an error if hasher throws', async () => {
+    const { sut, loadAccountByEmailRepository } = makeSut()
+    loadAccountByEmailRepository.load = jest
+      .fn()
+      .mockRejectedValueOnce(new Error())
+
+    const promise = sut.add(fakeData)
+
+    await expect(promise).rejects.toThrow()
+  })
+
   it('should call hasher with the correct password', async () => {
     const { sut, hasher } = makeSut()
 
