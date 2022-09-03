@@ -1,13 +1,12 @@
 import request from 'supertest'
 import { faker } from '@faker-js/faker'
-import env from '@/main/config/env'
 import { mongooseHelper } from '@/infra/database/mongoose/helpers/mongoose-helper'
 import { app } from '@/main/config/app'
 import { mongooseAccountModel } from '@/infra/database/mongoose/schemas/account'
 
 describe('Signup endToEnd', () => {
   beforeAll(async () => {
-    await mongooseHelper.connect(env.mongoUrl)
+    await mongooseHelper.connect('mongodb://localhost:27018/clean-node-api')
   })
 
   afterAll(async () => {
@@ -24,7 +23,7 @@ describe('Signup endToEnd', () => {
       passwordConfirmation: fakePassword
     }
 
-    const response = await request(app).post('/api/signup').send(account)
+    const response = await request(app).post('/api/v1/signup').send(account)
 
     expect(response.statusCode).toBe(200)
     expect(response.body.name).toBe(account.name)
