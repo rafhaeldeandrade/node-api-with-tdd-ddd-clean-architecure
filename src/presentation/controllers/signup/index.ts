@@ -3,10 +3,12 @@ import { Controller } from '@/presentation/contracts/controller'
 import { httpRequest, httpResponse } from '@/presentation/contracts/http'
 import {
   badRequest,
+  forbidden,
   ok,
   serverError
 } from '@/presentation/helpers/http/http-helper'
 import { Validation } from '@/presentation/contracts/validation'
+import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 
 export class SignupController implements Controller {
   constructor(
@@ -24,7 +26,8 @@ export class SignupController implements Controller {
         email,
         password
       })
-
+      const emailWasUsedBefore = !account
+      if (emailWasUsedBefore) return forbidden(new InvalidParamError('email'))
       return ok(account)
     } catch (error) {
       return serverError(error as Error)
