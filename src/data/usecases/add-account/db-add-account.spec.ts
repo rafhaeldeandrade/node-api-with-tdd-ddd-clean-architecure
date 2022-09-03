@@ -6,6 +6,7 @@ import { AddAccount, AddAccountModel } from '@/domain/usecases/add-account'
 import { faker } from '@faker-js/faker'
 import { LoadAccountByEmailRepository } from '@/data/contracts/database/load-account-by-email-repository'
 import { Encrypter } from '@/data/contracts/authentication/encrypter'
+import { UpdateAccessTokenRepository } from '@/data/contracts/database/update-access-token-repository'
 
 const fakeId: string = faker.datatype.uuid()
 const fakePassword = faker.internet.password()
@@ -49,12 +50,19 @@ class EncrypterStub implements Encrypter {
   }
 }
 
+class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
+  async update(id: string, token: string): Promise<void> {
+    return undefined
+  }
+}
+
 interface SutTypes {
   sut: AddAccount
   hasher: Hasher
   loadAccountByEmailRepository: LoadAccountByEmailRepository
   addAccountRepository: AddAccountRepository
   encrypter: Encrypter
+  updateAccessTokenRepository: UpdateAccessTokenRepository
 }
 
 function makeSut(): SutTypes {
@@ -62,18 +70,21 @@ function makeSut(): SutTypes {
   const hasher = new HasherStub()
   const addAccountRepository = new AddAccountRepositoryStub()
   const encrypter = new EncrypterStub()
+  const updateAccessTokenRepository = new UpdateAccessTokenRepositoryStub()
   const sut = new DbAddAccount(
     loadAccountByEmailRepository,
     hasher,
     addAccountRepository,
-    encrypter
+    encrypter,
+    updateAccessTokenRepository
   )
   return {
     sut,
     loadAccountByEmailRepository,
     hasher,
     addAccountRepository,
-    encrypter
+    encrypter,
+    updateAccessTokenRepository
   }
 }
 
@@ -187,6 +198,16 @@ describe('DbAddAccountUseCase', () => {
     const promise = sut.add(fakeData)
 
     await expect(promise).rejects.toThrow()
+  })
+
+  it('should call updateAccessTokenRepository with correct params', async () => {
+    const { sut, updateAccessTokenRepository } = makeSut()
+    const updateSpy = jest.spyOn(updateAccessTokenRepository, 'update')
+
+    await sut.add(fakeData)
+
+    expect(updateSpy).toHaveBeenCalledTimes(1)
+    expect(updateSpy).toHaveBeenCalledWith(fakeId, fakeEncryptedToken)
   })
 
   it('should return an account on success', async () => {
