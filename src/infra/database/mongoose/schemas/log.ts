@@ -5,7 +5,8 @@ const logSchema = new mongoose.Schema(
     stack: { type: String, required: true }
   },
   {
-    timestamps: true
+    timestamps: true,
+    versionKey: false
   }
 )
 

@@ -8,7 +8,8 @@ const accountSchema = new mongoose.Schema(
     accessToken: { type: String }
   },
   {
-    timestamps: true
+    timestamps: true,
+    versionKey: false
   }
 )
 
