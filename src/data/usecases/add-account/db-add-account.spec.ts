@@ -210,6 +210,19 @@ describe('DbAddAccountUseCase', () => {
     expect(updateSpy).toHaveBeenCalledWith(fakeId, fakeEncryptedToken)
   })
 
+  it('should throw if updateAccessTokenRepository throws', async () => {
+    const { sut, updateAccessTokenRepository } = makeSut()
+    updateAccessTokenRepository.update = jest
+      .fn()
+      .mockImplementationOnce(() => {
+        throw new Error()
+      })
+
+    const promise = sut.add(fakeData)
+
+    await expect(promise).rejects.toThrow()
+  })
+
   it('should return an account on success', async () => {
     const { sut } = makeSut()
 

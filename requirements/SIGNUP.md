@@ -10,8 +10,8 @@
 - [x] Generates a hash for the **password**
 - [x] Creates an account with the received params, changing **password** for the hash value
 - [x] Generates an access token from created account user id
-- [] Updates account with the access token generated previously
-- [] Returns 200 with the account created + access token
+- [x] Updates account with the access token generated previously
+- [x] Returns 200 with the account created + access token
 
 ## Exceptions
 
@@ -22,5 +22,5 @@
 - [x] Returns status 403 if email was already registered in another account
 - [x] Returns status 500 if something throws when generating a hash for password
 - [x] Returns status 500 if something throws when saving account on DB
-- [] Returns status 500 if something throws when generating an access token
-- [] Returns status 500 if something throws when updating the new account with the generated access token
+- [x] Returns status 500 if something throws when generating an access token
+- [x] Returns status 500 if something throws when updating the new account with the generated access token
