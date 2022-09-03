@@ -10,6 +10,7 @@ import {
   serverError
 } from '@/presentation/helpers/http/http-helper'
 import { Validation } from '@/presentation/contracts/validation'
+import { JwtAdapter } from '@/infra/cryptography/jwt/jwt-adapter'
 
 class ValidationStub implements Validation {
   validate(input: any): Error | null {
@@ -115,15 +116,18 @@ describe('SignupController', () => {
 
   it('should return 200 when everything works', async () => {
     const { sut, addAccountStub } = makeSut()
+    const fakeAccessToken = faker.datatype.uuid()
     const mockAddResult = {
       id: faker.datatype.uuid(),
       name: httpRequest.body.name,
       email: httpRequest.body.email,
-      password: httpRequest.body.password
+      password: httpRequest.body.password,
+      accessToken: fakeAccessToken
     }
-    jest
-      .spyOn(addAccountStub, 'add')
-      .mockImplementationOnce(async () => mockAddResult)
+    JwtAdapter.prototype.encrypt = jest
+      .fn()
+      .mockResolvedValueOnce(fakeAccessToken)
+    addAccountStub.add = jest.fn().mockResolvedValueOnce(mockAddResult)
 
     const httpResponse = await sut.handle(httpRequest)
 

@@ -30,6 +30,9 @@ export class DbAddAccount implements AddAccount {
       createdAccount.id,
       accessToken
     )
-    return createdAccount
+    return {
+      ...createdAccount,
+      accessToken
+    }
   }
 }

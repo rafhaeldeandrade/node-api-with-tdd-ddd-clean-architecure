@@ -15,13 +15,14 @@ const fakeData = {
   email: faker.internet.email(),
   password: fakePassword
 }
-
+const fakeEncryptedToken = faker.datatype.uuid()
 function makeAccount(): AccountModel {
   return {
     id: fakeId,
     name: fakeData.name,
     email: fakeData.email,
-    password: 'hash' + fakeData.password
+    password: 'hash' + fakeData.password,
+    accessToken: undefined
   }
 }
 
@@ -43,7 +44,6 @@ class AddAccountRepositoryStub implements AddAccountRepository {
   }
 }
 
-const fakeEncryptedToken = faker.datatype.uuid()
 class EncrypterStub implements Encrypter {
   encrypt(value: string): string {
     return fakeEncryptedToken
@@ -219,7 +219,8 @@ describe('DbAddAccountUseCase', () => {
       id: fakeId,
       name: fakeData.name,
       email: fakeData.email,
-      password: 'hash' + fakePassword
+      password: 'hash' + fakePassword,
+      accessToken: fakeEncryptedToken
     })
   })
 })
