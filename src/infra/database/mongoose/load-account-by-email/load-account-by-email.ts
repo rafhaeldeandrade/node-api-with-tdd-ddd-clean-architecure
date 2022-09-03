@@ -2,7 +2,6 @@ import { LoadAccountByEmailRepository } from '@/data/contracts/database/load-acc
 import { AccountModel } from '@/domain/models/account'
 import { mongooseAccountModel } from '@/infra/database/mongoose/schemas/account'
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class MongooseLoadAccountByEmail
   implements LoadAccountByEmailRepository
 {
