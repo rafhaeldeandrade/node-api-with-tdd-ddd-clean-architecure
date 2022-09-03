@@ -170,12 +170,23 @@ describe('DbAddAccountUseCase', () => {
 
   it('should call encrypter with correct param', async () => {
     const { sut, encrypter } = makeSut()
-
     const encryptSpy = jest.spyOn(encrypter, 'encrypt')
+
     await sut.add(fakeData)
 
     expect(encryptSpy).toHaveBeenCalledTimes(1)
     expect(encryptSpy).toHaveBeenCalledWith(fakeId)
+  })
+
+  it('should throw if encrypter throws', async () => {
+    const { sut, encrypter } = makeSut()
+    encrypter.encrypt = jest.fn().mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    const promise = sut.add(fakeData)
+
+    await expect(promise).rejects.toThrow()
   })
 
   it('should return an account on success', async () => {
