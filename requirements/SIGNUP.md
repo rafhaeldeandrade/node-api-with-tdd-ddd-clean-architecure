@@ -9,7 +9,7 @@
 - [x] Validates if there is an user with the email provided
 - [x] Generates a hash for the **password**
 - [x] Creates an account with the received params, changing **password** for the hash value
-- [] Generates an access token from created account user id
+- [x] Generates an access token from created account user id
 - [] Updates account with the access token generated previously
 - [] Returns 200 with the account created + access token
 

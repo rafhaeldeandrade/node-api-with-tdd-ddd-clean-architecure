@@ -5,6 +5,7 @@ import { AccountModel } from '@/domain/models/account'
 import { AddAccount, AddAccountModel } from '@/domain/usecases/add-account'
 import { faker } from '@faker-js/faker'
 import { LoadAccountByEmailRepository } from '@/data/contracts/database/load-account-by-email-repository'
+import { Encrypter } from '@/data/contracts/authentication/encrypter'
 
 const fakeId: string = faker.datatype.uuid()
 const fakePassword = faker.internet.password()
@@ -41,23 +42,39 @@ class AddAccountRepositoryStub implements AddAccountRepository {
   }
 }
 
+const fakeEncryptedToken = faker.datatype.uuid()
+class EncrypterStub implements Encrypter {
+  encrypt(value: string): string {
+    return fakeEncryptedToken
+  }
+}
+
 interface SutTypes {
   sut: AddAccount
   hasher: Hasher
   loadAccountByEmailRepository: LoadAccountByEmailRepository
   addAccountRepository: AddAccountRepository
+  encrypter: Encrypter
 }
 
 function makeSut(): SutTypes {
   const loadAccountByEmailRepository = new LoadAccountByEmailRepositoryStub()
   const hasher = new HasherStub()
   const addAccountRepository = new AddAccountRepositoryStub()
+  const encrypter = new EncrypterStub()
   const sut = new DbAddAccount(
     loadAccountByEmailRepository,
     hasher,
-    addAccountRepository
+    addAccountRepository,
+    encrypter
   )
-  return { sut, loadAccountByEmailRepository, hasher, addAccountRepository }
+  return {
+    sut,
+    loadAccountByEmailRepository,
+    hasher,
+    addAccountRepository,
+    encrypter
+  }
 }
 
 describe('DbAddAccountUseCase', () => {
@@ -149,6 +166,16 @@ describe('DbAddAccountUseCase', () => {
     const promise = sut.add(fakeData)
 
     await expect(promise).rejects.toThrow()
+  })
+
+  it('should call encrypter with correct param', async () => {
+    const { sut, encrypter } = makeSut()
+
+    const encryptSpy = jest.spyOn(encrypter, 'encrypt')
+    await sut.add(fakeData)
+
+    expect(encryptSpy).toHaveBeenCalledTimes(1)
+    expect(encryptSpy).toHaveBeenCalledWith(fakeId)
   })
 
   it('should return an account on success', async () => {
