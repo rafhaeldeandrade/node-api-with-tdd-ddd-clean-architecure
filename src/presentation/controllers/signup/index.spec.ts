@@ -5,6 +5,7 @@ import { AccountModel } from '@/domain/models/account'
 import { AddAccountModel, AddAccount } from '@/domain/usecases/add-account'
 import {
   badRequest,
+  forbidden,
   ok,
   serverError
 } from '@/presentation/helpers/http/http-helper'
@@ -101,6 +102,15 @@ describe('SignupController', () => {
       email: httpRequest.body.email,
       password: httpRequest.body.password
     })
+  })
+
+  it('should return 403 if the email was previously used to register another account (addAccount returns null)', async () => {
+    const { sut, addAccountStub } = makeSut()
+    addAccountStub.add = jest.fn().mockResolvedValueOnce(null)
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual(forbidden(new InvalidParamError('email')))
   })
 
   it('should return 200 when everything works', async () => {
