@@ -1,5 +1,6 @@
 export interface httpRequest {
   body: HttpRequestMessage
+  headers?: HttpRequestHeaders
 }
 
 export interface httpResponse {
@@ -13,4 +14,8 @@ interface HttpResponseMessage {
 
 interface HttpRequestMessage {
   [key: string]: any
+}
+
+interface HttpRequestHeaders {
+  authorization: string
 }
