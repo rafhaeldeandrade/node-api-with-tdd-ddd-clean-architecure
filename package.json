@@ -58,7 +58,8 @@
     "mongoose": "6.5.0",
     "tsc-alias": "1.7.0",
     "url-slug": "^3.0.4",
-    "validator": "13.7.0"
+    "validator": "13.7.0",
+    "zod": "^3.19.0"
   },
   "engines": {
     "node": "16.x"
