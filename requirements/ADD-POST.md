@@ -13,8 +13,8 @@
 - [] Validates if **authorId** is a string
 - [] Validates if **accessToken** provided belongs to an account with \_id equal to **authorId**
 - [x] Validates if title is unique
-- [] Generates a slug for the title
-- [] Saves the post in DB
+- [x] Generates a slug for the title
+- [x] Saves the post in DB
 - [x] Returns 201 with the post created, without **post** property
 
 ## Exceptions
@@ -29,8 +29,8 @@
 - [] Returns status 400 if **authorId** isn't string
 - [] Returns status 401 if accessToken provided don't belong to authorId
 - [x] Returns status 409 if title was already used in another post
-- [] Returns status 500 if something throws when validating **postDate**
+- [x] Returns status 500 if something throws when validating **postDate**
 - [] Returns status 500 if something throws when fetching an account with **authorId**
-- [] Returns status 500 if something throws when generating the url slug for the title
-- [] Returns status 500 if something throws when searching for a post with the generated url slug
-- [] Returns status 500 if something throws when creating a post in DB
+- [x] Returns status 500 if something throws when generating the url slug for the title
+- [x] Returns status 500 if something throws when searching for a post with the title provided
+- [x] Returns status 500 if something throws when creating a post in DB

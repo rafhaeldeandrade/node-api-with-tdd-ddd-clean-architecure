@@ -16,20 +16,24 @@ export class AddPostController implements Controller {
   ) {}
 
   async handle(params: httpRequest): Promise<httpResponse> {
-    const error = this.validation.validate(params.body)
-    if (error) return badRequest(error)
-    const { title, subtitle, postDate, categories, post, authorId } =
-      params.body
-    const savedPost = await this.addPostUseCase.add({
-      title,
-      subtitle,
-      postDate,
-      categories,
-      post,
-      authorId
-    })
-    const postAlreadyExists = !savedPost
-    if (postAlreadyExists) return conflict(new PostAlreadyExistsError(title))
-    return created(savedPost)
+    try {
+      const error = this.validation.validate(params.body)
+      if (error) return badRequest(error)
+      const { title, subtitle, postDate, categories, post, authorId } =
+        params.body
+      const savedPost = await this.addPostUseCase.add({
+        title,
+        subtitle,
+        postDate,
+        categories,
+        post,
+        authorId
+      })
+      const postAlreadyExists = !savedPost
+      if (postAlreadyExists) return conflict(new PostAlreadyExistsError(title))
+      return created(savedPost)
+    } catch (error) {
+      return badRequest(error as Error)
+    }
   }
 }
