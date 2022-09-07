@@ -39,4 +39,13 @@ describe('MongooseLoadPostByTitleRepository', () => {
       lean: true
     })
   })
+
+  it('should return null if findOne returns null', async () => {
+    const { sut } = makeSut()
+    jest.spyOn(mongoosePostModel, 'findOne').mockResolvedValueOnce(null)
+
+    const promise = sut.load(fakeParam)
+
+    await expect(promise).resolves.toBeNull()
+  })
 })
