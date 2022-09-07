@@ -17,4 +17,10 @@ describe('GenerateUrlSlug', () => {
 
     expect(sut).toBeDefined()
   })
+
+  it('should have a method called generate', () => {
+    const { sut } = makeSut()
+
+    expect(sut.generate).toBeDefined()
+  })
 })
