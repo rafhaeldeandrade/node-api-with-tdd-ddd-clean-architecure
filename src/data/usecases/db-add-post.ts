@@ -4,13 +4,13 @@ import {
   AddPostOutput
 } from '@/domain/usecases/add-post'
 import { LoadPostByTitleRepository } from '@/data/contracts/database/load-post-by-title-repository'
-import { GenerateUrlSlug } from '@/data/contracts/utils/generate-url-slug'
+import { SlugGenerator } from '@/data/contracts/utils/slug-generator'
 import { AddPostRepository } from '@/data/contracts/database/add-post-repository'
 
 export class DbAddPost implements AddPost {
   constructor(
     private readonly loadPostByTitleRepository: LoadPostByTitleRepository,
-    private readonly generateUrlSlug: GenerateUrlSlug,
+    private readonly generateUrlSlug: SlugGenerator,
     private readonly addPostRepository: AddPostRepository
   ) {}
 

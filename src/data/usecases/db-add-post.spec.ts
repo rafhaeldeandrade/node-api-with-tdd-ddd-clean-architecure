@@ -2,7 +2,7 @@ import { DbAddPost } from '@/data/usecases/db-add-post'
 import { LoadPostByTitleRepository } from '@/data/contracts/database/load-post-by-title-repository'
 import { PostModel } from '@/domain/models/post'
 import { faker } from '@faker-js/faker'
-import { GenerateUrlSlug } from '@/data/contracts/utils/generate-url-slug'
+import { SlugGenerator } from '@/data/contracts/utils/slug-generator'
 import {
   AddPostRepository,
   AddPostRepositoryInput
@@ -15,7 +15,7 @@ class LoadPostByTitleRepositoryStub implements LoadPostByTitleRepository {
 }
 
 const fakeUrlSlug = faker.lorem.slug()
-class GenerateUrlSlugStub implements GenerateUrlSlug {
+class GenerateUrlSlugStub implements SlugGenerator {
   generate(title: string): string {
     return fakeUrlSlug
   }
@@ -40,7 +40,7 @@ class AddPostRepositoryStub implements AddPostRepository {
 interface SutTypes {
   sut: DbAddPost
   loadPostByTitleRepositoryStub: LoadPostByTitleRepository
-  generateUrlSlugStub: GenerateUrlSlug
+  generateUrlSlugStub: SlugGenerator
   addPostRepositoryStub: AddPostRepository
 }
 

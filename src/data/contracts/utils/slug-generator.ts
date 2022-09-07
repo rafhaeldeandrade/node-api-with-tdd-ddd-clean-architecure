@@ -1,3 +1,3 @@
-export interface GenerateUrlSlug {
+export interface SlugGenerator {
   generate: (value: string) => string
 }
