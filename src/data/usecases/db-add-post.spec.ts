@@ -21,7 +21,7 @@ class GenerateUrlSlugStub implements GenerateUrlSlug {
   }
 }
 
-const fakeAddPostOutput = {
+const fakeAddPostRepositoryOutput = {
   id: faker.datatype.uuid(),
   title: faker.lorem.sentence(),
   subtitle: faker.lorem.sentence(),
@@ -33,7 +33,7 @@ const fakeAddPostOutput = {
 }
 class AddPostRepositoryStub implements AddPostRepository {
   async add(postData: AddPostRepositoryInput): Promise<PostModel> {
-    return fakeAddPostOutput
+    return fakeAddPostRepositoryOutput
   }
 }
 
@@ -124,5 +124,14 @@ describe('AddPost Usecase', () => {
 
     expect(addSpy).toHaveBeenCalledTimes(1)
     expect(addSpy).toHaveBeenCalledWith({ ...fakeParams, urlSlug: fakeUrlSlug })
+  })
+
+  it('should return a post without urlSlug and post property on success', async () => {
+    const { sut } = makeSut()
+
+    const { urlSlug, post, ...output } = fakeAddPostRepositoryOutput
+    const result = await sut.add(fakeParams)
+
+    expect(result).toEqual(output)
   })
 })
