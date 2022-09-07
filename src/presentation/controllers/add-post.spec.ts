@@ -137,4 +137,16 @@ describe('addPostController', () => {
 
     await expect(promise).resolves.toEqual(badRequest(error))
   })
+
+  it('should return 500 if something in validate throws', async () => {
+    const { sut, validationStub } = makeSut()
+    const error = new Error('any_error')
+    validationStub.validate = jest.fn().mockImplementationOnce(() => {
+      throw error
+    })
+
+    const promise = sut.handle(httpRequest)
+
+    await expect(promise).resolves.toEqual(badRequest(error))
+  })
 })
