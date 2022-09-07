@@ -7,7 +7,26 @@ import { mongoosePostModel } from './schemas/post'
 
 export class MongooseAddPost implements AddPostRepository {
   async add(params: AddPostRepositoryInput): Promise<PostModel> {
-    await mongoosePostModel.create(params)
-    return null as unknown as PostModel
+    const savedPost = await mongoosePostModel.create(params)
+    const {
+      title,
+      subtitle,
+      postDate,
+      categories,
+      authorId,
+      urlSlug,
+      post,
+      _id
+    } = savedPost
+    return {
+      id: _id.toString(),
+      title,
+      subtitle,
+      postDate,
+      categories,
+      authorId,
+      urlSlug,
+      post
+    }
   }
 }
