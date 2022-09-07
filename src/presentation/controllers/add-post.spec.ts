@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { Validation } from '@/presentation/contracts/validation'
 import { AddPostController } from '@/presentation/controllers/add-post'
+import { badRequest } from '@/presentation/helpers/http/http-helper'
 
 class ValidationStub implements Validation {
   validate(input: any): Error | null {
@@ -59,5 +60,15 @@ describe('addPostController', () => {
     await sut.handle(httpRequest)
 
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  it('should return 400 if validation.validate returns an error', async () => {
+    const { sut, validationStub } = makeSut()
+    const error = new Error('any_error')
+    validationStub.validate = jest.fn().mockReturnValueOnce(error)
+
+    const promise = sut.handle(httpRequest)
+
+    await expect(promise).resolves.toEqual(badRequest(error))
   })
 })
