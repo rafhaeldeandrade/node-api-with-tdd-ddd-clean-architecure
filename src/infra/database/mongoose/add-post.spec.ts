@@ -61,4 +61,13 @@ describe('MongooseAddPostRepository', () => {
       ...fakeAddPostInput
     })
   })
+
+  it('should throw if create throws', async () => {
+    const { sut } = makeSut()
+    mongoosePostModel.create = jest.fn().mockRejectedValueOnce(new Error())
+
+    const promise = sut.add(fakeAddPostInput)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
