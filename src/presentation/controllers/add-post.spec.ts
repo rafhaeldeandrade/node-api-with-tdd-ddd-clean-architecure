@@ -17,4 +17,10 @@ describe('addPostController', () => {
 
     expect(sut).toBeDefined()
   })
+
+  it('should have a method called handle', () => {
+    const { sut } = makeSut()
+
+    expect(sut.handle).toBeDefined()
+  })
 })
