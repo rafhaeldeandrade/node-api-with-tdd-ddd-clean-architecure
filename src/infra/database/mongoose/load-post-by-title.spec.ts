@@ -48,4 +48,13 @@ describe('MongooseLoadPostByTitleRepository', () => {
 
     await expect(promise).resolves.toBeNull()
   })
+
+  it('should throw if mongoosePostModel throws', async () => {
+    const { sut } = makeSut()
+    jest.spyOn(mongoosePostModel, 'findOne').mockRejectedValueOnce(new Error())
+
+    const promise = sut.load(fakeParam)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
