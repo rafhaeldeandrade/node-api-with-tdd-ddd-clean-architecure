@@ -2,6 +2,11 @@ import { faker } from '@faker-js/faker'
 import { Validation } from '@/presentation/contracts/validation'
 import { AddPostController } from '@/presentation/controllers/add-post'
 import { badRequest } from '@/presentation/helpers/http/http-helper'
+import {
+  AddPost,
+  AddPostModel,
+  AddPostOutput
+} from '@/domain/usecases/add-post'
 
 class ValidationStub implements Validation {
   validate(input: any): Error | null {
@@ -9,17 +14,33 @@ class ValidationStub implements Validation {
   }
 }
 
+class AddPostUseCaseStub implements AddPost {
+  async add(params: AddPostModel): Promise<AddPostOutput | null> {
+    return {
+      id: faker.datatype.uuid(),
+      title: faker.lorem.sentence(),
+      subtitle: faker.lorem.sentence(),
+      postDate: faker.date.past(),
+      categories: [faker.lorem.word()],
+      authorId: faker.datatype.number(10000)
+    }
+  }
+}
+
 interface SutTypes {
   sut: AddPostController
   validationStub: Validation
+  addPostUseCaseStub: AddPost
 }
 
 function makeSut(): SutTypes {
   const validationStub = new ValidationStub()
-  const sut = new AddPostController(validationStub)
+  const addPostUseCaseStub = new AddPostUseCaseStub()
+  const sut = new AddPostController(validationStub, addPostUseCaseStub)
   return {
     sut,
-    validationStub
+    validationStub,
+    addPostUseCaseStub
   }
 }
 
@@ -36,7 +57,7 @@ const httpRequest = {
     authorId: faker.datatype.number(10000)
   },
   headers: {
-    authorization: faker.datatype.uuid()
+    accesstoken: faker.datatype.uuid()
   }
 }
 
@@ -70,5 +91,14 @@ describe('addPostController', () => {
     const promise = sut.handle(httpRequest)
 
     await expect(promise).resolves.toEqual(badRequest(error))
+  })
+
+  it('should call addPostUseCase with correct params', async () => {
+    const { sut, addPostUseCaseStub } = makeSut()
+    const addSpy = jest.spyOn(addPostUseCaseStub, 'add')
+
+    await sut.handle(httpRequest)
+
+    expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 })
