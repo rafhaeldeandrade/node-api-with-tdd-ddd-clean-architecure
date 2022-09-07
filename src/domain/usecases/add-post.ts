@@ -9,7 +9,7 @@ export interface AddPostModel {
   post: string
 }
 
-export interface AddPostOutput extends Omit<PostModel, 'post'> {}
+export interface AddPostOutput extends Omit<PostModel, 'post' | 'urlSlug'> {}
 
 export interface AddPost {
   add: (params: AddPostModel) => Promise<AddPostOutput | null>

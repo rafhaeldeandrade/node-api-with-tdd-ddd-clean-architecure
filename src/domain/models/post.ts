@@ -6,4 +6,5 @@ export interface PostModel {
   categories: string[]
   authorId: string
   post: string
+  urlSlug: string
 }
