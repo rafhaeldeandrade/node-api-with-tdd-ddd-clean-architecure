@@ -4,6 +4,6 @@ export interface PostModel {
   subtitle: string
   postDate: Date
   categories: string[]
-  authorId: number
+  authorId: string
   post: string
 }

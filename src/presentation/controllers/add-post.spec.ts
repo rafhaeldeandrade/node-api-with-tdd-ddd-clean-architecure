@@ -25,7 +25,7 @@ const fakeAddPostUseCaseStubOutput = {
   subtitle: faker.lorem.sentence(),
   postDate: faker.date.past(),
   categories: [faker.lorem.word()],
-  authorId: faker.datatype.number(10000)
+  authorId: faker.datatype.number(10000).toString()
 }
 class AddPostUseCaseStub implements AddPost {
   async add(params: AddPostModel): Promise<AddPostOutput | null> {

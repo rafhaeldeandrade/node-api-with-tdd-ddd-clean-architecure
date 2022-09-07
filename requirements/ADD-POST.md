@@ -12,7 +12,7 @@
 - [] Validates if **categories** is an array of strings
 - [] Validates if **authorId** is a string
 - [] Validates if **accessToken** provided belongs to an account with \_id equal to **authorId**
-- [] Validates if title is unique
+- [x] Validates if title is unique
 - [] Generates a slug for the title
 - [] Saves the post in DB
 - [x] Returns 201 with the post created, without **post** property
