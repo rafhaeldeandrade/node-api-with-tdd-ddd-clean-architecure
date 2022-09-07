@@ -15,12 +15,14 @@ export class DbAddPost implements AddPost {
   ) {}
 
   async add(params: AddPostModel): Promise<AddPostOutput | null> {
-    await this.loadPostByTitleRepository.load(params.title)
-    const urlSlug = this.generateUrlSlug.generate(params.title)
-    await this.addPostRepository.add({
+    const foundPost = await this.loadPostByTitleRepository.load(params.title)
+    if (foundPost) return null
+    const generatedUrlSlug = this.generateUrlSlug.generate(params.title)
+    const savedPost = await this.addPostRepository.add({
       ...params,
-      urlSlug
+      urlSlug: generatedUrlSlug
     })
-    return null
+    const { urlSlug, post, ...postWithoutUrlSlugAndPost } = savedPost
+    return postWithoutUrlSlugAndPost
   }
 }
