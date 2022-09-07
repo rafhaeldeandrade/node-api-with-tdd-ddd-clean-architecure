@@ -1,12 +1,13 @@
 import { faker } from '@faker-js/faker'
 import { Validation } from '@/presentation/contracts/validation'
 import { AddPostController } from '@/presentation/controllers/add-post'
-import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { badRequest, conflict } from '@/presentation/helpers/http/http-helper'
 import {
   AddPost,
   AddPostModel,
   AddPostOutput
 } from '@/domain/usecases/add-post'
+import { PostAlreadyExistsError } from '@/presentation/errors/post-already-exists-error'
 
 class ValidationStub implements Validation {
   validate(input: any): Error | null {
@@ -100,5 +101,16 @@ describe('addPostController', () => {
     await sut.handle(httpRequest)
 
     expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  it('should return 409 if a post with the provided title already exists', async () => {
+    const { sut, addPostUseCaseStub } = makeSut()
+    addPostUseCaseStub.add = jest.fn().mockReturnValueOnce(null)
+
+    const promise = sut.handle(httpRequest)
+
+    await expect(promise).resolves.toEqual(
+      conflict(new PostAlreadyExistsError(httpRequest.body.title))
+    )
   })
 })
