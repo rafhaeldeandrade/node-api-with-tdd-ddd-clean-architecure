@@ -13,7 +13,18 @@ function makeSut(): SutTypes {
   }
 }
 
+const fakePost = {
+  _id: faker.datatype.uuid(),
+  title: faker.lorem.sentence(),
+  subtitle: faker.lorem.sentence(),
+  postDate: faker.date.past(),
+  categories: [faker.lorem.word()],
+  authorId: faker.datatype.uuid(),
+  post: faker.lorem.paragraph(),
+  urlSlug: faker.lorem.slug()
+}
 const fakeParam = faker.word.noun()
+
 describe('MongooseLoadPostByTitleRepository', () => {
   it('should be defined', () => {
     const { sut } = makeSut()
@@ -56,5 +67,18 @@ describe('MongooseLoadPostByTitleRepository', () => {
     const promise = sut.load(fakeParam)
 
     await expect(promise).rejects.toThrow()
+  })
+
+  it('should return a post on success', async () => {
+    const { sut } = makeSut()
+    jest.spyOn(mongoosePostModel, 'findOne').mockResolvedValueOnce(fakePost)
+
+    const promise = sut.load(fakeParam)
+
+    const { _id, ...postWithoutId } = fakePost
+    await expect(promise).resolves.toEqual({
+      ...postWithoutId,
+      id: _id.toString()
+    })
   })
 })
