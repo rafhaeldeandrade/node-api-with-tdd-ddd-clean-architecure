@@ -1,7 +1,11 @@
 import { faker } from '@faker-js/faker'
 import { Validation } from '@/presentation/contracts/validation'
 import { AddPostController } from '@/presentation/controllers/add-post'
-import { badRequest, conflict } from '@/presentation/helpers/http/http-helper'
+import {
+  badRequest,
+  conflict,
+  created
+} from '@/presentation/helpers/http/http-helper'
 import {
   AddPost,
   AddPostModel,
@@ -15,16 +19,17 @@ class ValidationStub implements Validation {
   }
 }
 
+const fakeAddPostUseCaseStubOutput = {
+  id: faker.datatype.uuid(),
+  title: faker.lorem.sentence(),
+  subtitle: faker.lorem.sentence(),
+  postDate: faker.date.past(),
+  categories: [faker.lorem.word()],
+  authorId: faker.datatype.number(10000)
+}
 class AddPostUseCaseStub implements AddPost {
   async add(params: AddPostModel): Promise<AddPostOutput | null> {
-    return {
-      id: faker.datatype.uuid(),
-      title: faker.lorem.sentence(),
-      subtitle: faker.lorem.sentence(),
-      postDate: faker.date.past(),
-      categories: [faker.lorem.word()],
-      authorId: faker.datatype.number(10000)
-    }
+    return fakeAddPostUseCaseStubOutput
   }
 }
 
@@ -56,9 +61,6 @@ const httpRequest = {
     categories: fakeStringArray,
     post: faker.lorem.paragraphs(10),
     authorId: faker.datatype.number(10000)
-  },
-  headers: {
-    accesstoken: faker.datatype.uuid()
   }
 }
 
@@ -111,6 +113,16 @@ describe('addPostController', () => {
 
     await expect(promise).resolves.toEqual(
       conflict(new PostAlreadyExistsError(httpRequest.body.title))
+    )
+  })
+
+  it('should return 201 on success', async () => {
+    const { sut } = makeSut()
+
+    const promise = sut.handle(httpRequest)
+
+    await expect(promise).resolves.toEqual(
+      created(fakeAddPostUseCaseStubOutput)
     )
   })
 })
