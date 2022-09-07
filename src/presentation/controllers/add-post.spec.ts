@@ -1,13 +1,41 @@
-import { AddPostController } from './add-post'
+import { faker } from '@faker-js/faker'
+import { Validation } from '@/presentation/contracts/validation'
+import { AddPostController } from '@/presentation/controllers/add-post'
+
+class ValidationStub implements Validation {
+  validate(input: any): Error | null {
+    return null
+  }
+}
 
 interface SutTypes {
   sut: AddPostController
+  validationStub: Validation
 }
 
 function makeSut(): SutTypes {
-  const sut = new AddPostController()
+  const validationStub = new ValidationStub()
+  const sut = new AddPostController(validationStub)
   return {
-    sut
+    sut,
+    validationStub
+  }
+}
+
+const fakeStringArray = Array(3)
+  .fill('')
+  .map(() => faker.random.word())
+const httpRequest = {
+  body: {
+    title: faker.lorem.sentence(),
+    subtitle: faker.lorem.sentence(),
+    postDate: faker.date.past(),
+    categories: fakeStringArray,
+    post: faker.lorem.paragraphs(10),
+    authorId: faker.datatype.number(10000)
+  },
+  headers: {
+    authorization: faker.datatype.uuid()
   }
 }
 
@@ -22,5 +50,14 @@ describe('addPostController', () => {
     const { sut } = makeSut()
 
     expect(sut.handle).toBeDefined()
+  })
+
+  it('should call validation.validate with correct params', async () => {
+    const { sut, validationStub } = makeSut()
+    const validateSpy = jest.spyOn(validationStub, 'validate')
+
+    await sut.handle(httpRequest)
+
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 })
