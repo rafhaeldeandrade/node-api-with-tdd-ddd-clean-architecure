@@ -10,10 +10,11 @@
 - [] Validates if post is a string and has minimum 100 and maximum 3000 characters
 - [] Validates if **postDate** is a valid date
 - [] Validates if **categories** is an array of strings
-- [] Validates if **authorId** is a string and if it exists
+- [] Validates if **authorId** is a string
 - [] Validates if **accessToken** provided belongs to an account with \_id equal to **authorId**
-- [] Generates a slug for the title
 - [] Validates if title is unique
+- [] Generates a slug for the title
+- [] Saves the post in DB
 - [x] Returns 201 with the post created, without **post** property
 
 ## Exceptions
