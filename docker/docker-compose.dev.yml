@@ -8,6 +8,7 @@ services:
     command: yarn dev
     volumes:
       - ../src:/usr/src/app/src
+      - ../.env:/usr/src/app/.env
     networks:
       - clean-api-network
   clean-api-db:
@@ -17,7 +18,7 @@ services:
       - '27018:27017'
     volumes:
       - './data:/data/db'
-    restart: always
+    restart: on-failure
 
 networks:
   clean-api-network:
