@@ -4,7 +4,8 @@ import { AddPostController } from '@/presentation/controllers/add-post'
 import {
   badRequest,
   conflict,
-  created
+  created,
+  serverError
 } from '@/presentation/helpers/http/http-helper'
 import {
   AddPost,
@@ -135,7 +136,7 @@ describe('addPostController', () => {
 
     const promise = sut.handle(httpRequest)
 
-    await expect(promise).resolves.toEqual(badRequest(error))
+    await expect(promise).resolves.toEqual(serverError(error))
   })
 
   it('should return 500 if something in validate throws', async () => {
@@ -147,6 +148,6 @@ describe('addPostController', () => {
 
     const promise = sut.handle(httpRequest)
 
-    await expect(promise).resolves.toEqual(badRequest(error))
+    await expect(promise).resolves.toEqual(serverError(error))
   })
 })

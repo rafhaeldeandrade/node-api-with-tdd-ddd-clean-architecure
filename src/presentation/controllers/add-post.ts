@@ -5,7 +5,8 @@ import { Validation } from '@/presentation/contracts/validation'
 import {
   badRequest,
   conflict,
-  created
+  created,
+  serverError
 } from '@/presentation/helpers/http/http-helper'
 import { PostAlreadyExistsError } from '../errors/post-already-exists-error'
 
@@ -33,7 +34,7 @@ export class AddPostController implements Controller {
       if (postAlreadyExists) return conflict(new PostAlreadyExistsError(title))
       return created(savedPost)
     } catch (error) {
-      return badRequest(error as Error)
+      return serverError(error as Error)
     }
   }
 }
