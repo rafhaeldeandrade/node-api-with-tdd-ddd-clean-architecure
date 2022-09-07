@@ -17,4 +17,10 @@ describe('AddPost Usecase', () => {
 
     expect(sut).toBeDefined()
   })
+
+  it('should have a method called add', () => {
+    const { sut } = makeSut()
+
+    expect(sut.add).toBeDefined()
+  })
 })
