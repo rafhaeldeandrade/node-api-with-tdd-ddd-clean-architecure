@@ -14,7 +14,7 @@
 - [] Validates if **accessToken** provided belongs to an account with \_id equal to **authorId**
 - [] Generates a slug for the title
 - [] Validates if title is unique
-- [] Returns 201 with the post created, without **post** property
+- [x] Returns 201 with the post created, without **post** property
 
 ## Exceptions
 
@@ -27,7 +27,7 @@
 - [] Returns status 400 if **categories** isn't an array of strings
 - [] Returns status 400 if **authorId** isn't string
 - [] Returns status 401 if accessToken provided don't belong to authorId
-- [] Returns status 409 if title was already used in another post
+- [x] Returns status 409 if title was already used in another post
 - [] Returns status 500 if something throws when validating **postDate**
 - [] Returns status 500 if something throws when fetching an account with **authorId**
 - [] Returns status 500 if something throws when generating the url slug for the title
