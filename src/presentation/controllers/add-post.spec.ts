@@ -125,4 +125,16 @@ describe('addPostController', () => {
       created(fakeAddPostUseCaseStubOutput)
     )
   })
+
+  it('should return 500 if something in usecase throws', async () => {
+    const { sut, addPostUseCaseStub } = makeSut()
+    const error = new Error('any_error')
+    addPostUseCaseStub.add = jest.fn().mockImplementationOnce(() => {
+      throw error
+    })
+
+    const promise = sut.handle(httpRequest)
+
+    await expect(promise).resolves.toEqual(badRequest(error))
+  })
 })
