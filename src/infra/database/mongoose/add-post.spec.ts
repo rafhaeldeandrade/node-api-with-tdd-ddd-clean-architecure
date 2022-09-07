@@ -13,6 +13,7 @@ function makeSut(): SutTypes {
   }
 }
 
+const fakeId = faker.datatype.uuid()
 const fakeAddPostInput = {
   title: faker.lorem.sentence(),
   subtitle: faker.lorem.sentence(),
@@ -38,13 +39,26 @@ describe('MongooseAddPostRepository', () => {
 
   it('should call mongoosePostModel with correct params', async () => {
     const { sut } = makeSut()
-    const createSpy = jest
-      .spyOn(mongoosePostModel, 'create')
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      .mockImplementationOnce(async () => null)
+    const createSpy = (mongoosePostModel.create = jest
+      .fn()
+      .mockResolvedValueOnce({ _id: fakeId, ...fakeAddPostInput }))
 
     await sut.add(fakeAddPostInput)
 
     expect(createSpy).toHaveBeenCalledWith(fakeAddPostInput)
+  })
+
+  it('should return a PostModel on success', async () => {
+    const { sut } = makeSut()
+    mongoosePostModel.create = jest
+      .fn()
+      .mockResolvedValueOnce({ _id: fakeId, ...fakeAddPostInput })
+
+    const account = await sut.add(fakeAddPostInput)
+
+    expect(account).toEqual({
+      id: fakeId,
+      ...fakeAddPostInput
+    })
   })
 })
