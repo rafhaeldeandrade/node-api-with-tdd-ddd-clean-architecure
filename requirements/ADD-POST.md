@@ -10,10 +10,10 @@
 - [] Validates if post is a string and has minimum 100 and maximum 3000 characters
 - [] Validates if **postDate** is a valid date
 - [] Validates if **categories** is an array of strings
-- [] Validates if **authorId** is a number and if it exists
+- [] Validates if **authorId** is a string and if it exists
 - [] Validates if **accessToken** provided belongs to an account with \_id equal to **authorId**
 - [] Generates a slug for the title
-- [] Validates if slug is unique
+- [] Validates if title is unique
 - [] Returns 201 with the post created
 
 ## Exceptions
@@ -25,9 +25,9 @@
 - [] Returns status 400 if **post** isn't a string or dont have 100 to 3000 characters
 - [] Returns status 400 if **postDate** isn't a valid date
 - [] Returns status 400 if **categories** isn't an array of strings
-- [] Returns status 400 if **authorId** doesn't exist
+- [] Returns status 400 if **authorId** isn't string
 - [] Returns status 401 if accessToken provided don't belong to authorId
-- [] Returns status 409 if title slug was already used in another post
+- [] Returns status 409 if title was already used in another post
 - [] Returns status 500 if something throws when validating **postDate**
 - [] Returns status 500 if something throws when fetching an account with **authorId**
 - [] Returns status 500 if something throws when generating the url slug for the title
