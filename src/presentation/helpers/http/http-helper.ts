@@ -27,6 +27,13 @@ export function forbidden(error: Error): httpResponse {
   }
 }
 
+export function conflict(error: Error): httpResponse {
+  return {
+    statusCode: 409,
+    body: error
+  }
+}
+
 export function serverError(error: Error): httpResponse {
   return {
     statusCode: 500,
@@ -37,6 +44,13 @@ export function serverError(error: Error): httpResponse {
 export function ok(params: any): httpResponse {
   return {
     statusCode: 200,
+    body: params
+  }
+}
+
+export function created(params: any): httpResponse {
+  return {
+    statusCode: 201,
     body: params
   }
 }
