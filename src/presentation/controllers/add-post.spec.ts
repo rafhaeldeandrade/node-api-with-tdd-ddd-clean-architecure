@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker'
-import { Validation } from '@/presentation/contracts/validation'
 import { AddPostController } from '@/presentation/controllers/add-post'
 import {
   badRequest,
@@ -13,9 +12,10 @@ import {
   AddPostOutput
 } from '@/domain/usecases/add-post'
 import { PostAlreadyExistsError } from '@/presentation/errors/post-already-exists-error'
+import { SchemaValidation } from '../contracts/schema-validation'
 
-class ValidationStub implements Validation {
-  validate(input: any): Error | null {
+class ValidationStub implements SchemaValidation {
+  async validate(input: any): Promise<Error | null> {
     return null
   }
 }
@@ -36,7 +36,7 @@ class AddPostUseCaseStub implements AddPost {
 
 interface SutTypes {
   sut: AddPostController
-  validationStub: Validation
+  validationStub: SchemaValidation
   addPostUseCaseStub: AddPost
 }
 
