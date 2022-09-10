@@ -50,6 +50,8 @@
     ]
   },
   "dependencies": {
+    "@sentry/node": "^7.12.1",
+    "@sentry/tracing": "^7.12.1",
     "argon2": "0.28.7",
     "cors": "2.8.5",
     "dotenv": "16.0.1",
