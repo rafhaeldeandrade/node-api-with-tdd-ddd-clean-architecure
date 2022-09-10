@@ -7,7 +7,7 @@ import { MongooseLoadPostByTitle } from '@/infra/database/mongoose/load-post-by-
 import { GenerateUrlSlug } from '@/infra/utils/url-slug/generate-url-slug'
 import { MongooseAddPost } from '@/infra/database/mongoose/add-post'
 import { AddPostController } from '@/presentation/controllers/add-post'
-import { MongooseLogError } from '@/infra/database/mongoose/log-error'
+import { SentryLogError } from '@/infra/utils/sentry/log-error-repository'
 
 export function makeAddPostController(): Controller {
   const zodSchema = z.object({
@@ -26,6 +26,6 @@ export function makeAddPostController(): Controller {
   const addPost = new MongooseAddPost()
   const usecase = new DbAddPost(loadPostByTitle, generateUrlSlug, addPost)
   const addPostController = new AddPostController(zodValidator, usecase)
-  const logErrorRepository = new MongooseLogError()
+  const logErrorRepository = new SentryLogError()
   return new LogErrorDecoratorController(addPostController, logErrorRepository)
 }
