@@ -4,33 +4,44 @@ import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import { UnauthorizedError } from '@/presentation/errors/unauthorized-error'
 
+interface BodyError {
+  [key: string]: string
+}
+
+function returnBodyError(error: Error): BodyError {
+  return {
+    [error.name]: error.message
+  }
+}
+
 export function badRequest(
   error: MissingParamError | InvalidParamError
 ): httpResponse {
   return {
     statusCode: 400,
-    body: error
+    body: returnBodyError(error)
   }
 }
 
 export function unauthorized(): httpResponse {
+  const unauthorizedError = new UnauthorizedError()
   return {
     statusCode: 401,
-    body: new UnauthorizedError()
+    body: returnBodyError(unauthorizedError)
   }
 }
 
 export function forbidden(error: Error): httpResponse {
   return {
     statusCode: 403,
-    body: error
+    body: returnBodyError(error)
   }
 }
 
 export function conflict(error: Error): httpResponse {
   return {
     statusCode: 409,
-    body: error
+    body: returnBodyError(error)
   }
 }
 
