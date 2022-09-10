@@ -10,7 +10,3 @@ services:
       - '4000:4000'
     depends_on:
       - clean-api-db
-
-networks:
-  clean-api-network:
-    driver: bridge
