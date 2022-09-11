@@ -3,10 +3,12 @@ import { httpRequest, httpResponse } from '@/presentation/contracts/http'
 import { SchemaValidation } from '@/presentation/contracts/schema-validation'
 import {
   badRequest,
+  ok,
   serverError,
   unauthorized
 } from '@/presentation/helpers/http/http-helper'
 import { LoadAccountByToken } from '@/domain/usecases/load-account-by-token'
+
 export class AuthenticationMiddleware implements Middleware {
   constructor(
     private readonly validation: SchemaValidation,
@@ -22,7 +24,10 @@ export class AuthenticationMiddleware implements Middleware {
         headers ? headers['x-access-token'] : ''
       )
       if (!account) return unauthorized()
-      return null as unknown as httpResponse
+      return ok({
+        id: account.id,
+        role: account.role
+      })
     } catch (error) {
       return serverError(error as Error)
     }
