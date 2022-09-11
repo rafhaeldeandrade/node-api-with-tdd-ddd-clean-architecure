@@ -1,6 +1,7 @@
 import { AuthenticationMiddleware } from '@/presentation/middlewares/authentication'
 import { faker } from '@faker-js/faker'
 import { SchemaValidation } from '@/presentation/contracts/schema-validation'
+import { badRequest } from '@/presentation/helpers/http/http-helper'
 
 class ValidationStub implements SchemaValidation {
   async validate(input: any): Promise<Error | null> {
@@ -48,5 +49,15 @@ describe('Authentication Middleware', () => {
 
     expect(validateSpy).toHaveBeenCalledTimes(1)
     expect(validateSpy).toHaveBeenCalledWith(fakeHttpRequest.headers)
+  })
+
+  it('should return 400 if validation.validate returns an error', async () => {
+    const { sut, validationStub } = makeSut()
+    const error = new Error('any_error')
+    validationStub.validate = jest.fn().mockReturnValueOnce(error)
+
+    const promise = sut.handle(fakeHttpRequest)
+
+    await expect(promise).resolves.toEqual(badRequest(error))
   })
 })
