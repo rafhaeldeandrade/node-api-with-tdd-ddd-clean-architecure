@@ -100,7 +100,7 @@ describe('Authentication Middleware', () => {
     await expect(promise).resolves.toEqual(serverError(error))
   })
 
-  it('should call loadAccountByToken.load with correct param', async () => {
+  it('should call loadAccountByTokenUseCase.load with correct param', async () => {
     const { sut, loadAccountByTokenUseCaseStub } = makeSut()
     const loadSpy = jest
       .spyOn(loadAccountByTokenUseCaseStub, 'load')
@@ -112,6 +112,21 @@ describe('Authentication Middleware', () => {
     expect(loadSpy).toHaveBeenCalledWith(
       fakeHttpRequest.headers['x-access-token']
     )
+  })
+
+  it('should return 500 if loadAccountByTokenUseCase.load throws', async () => {
+    const { sut, loadAccountByTokenUseCaseStub } = makeSut()
+    const error = new Error('any_error')
+    error.stack = 'any_stack'
+    loadAccountByTokenUseCaseStub.load = jest
+      .fn()
+      .mockImplementationOnce(async () => {
+        throw error
+      })
+
+    const promise = sut.handle(fakeHttpRequest)
+
+    await expect(promise).resolves.toEqual(serverError(error))
   })
 
   it('should return 401 if loadAccountByTokenUseCase returns null (account not found)', async () => {
