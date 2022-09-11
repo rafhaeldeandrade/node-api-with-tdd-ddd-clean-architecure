@@ -17,5 +17,5 @@ interface HttpRequestMessage {
 }
 
 interface HttpRequestHeaders {
-  authorization: string
+  'x-access-token': string
 }
