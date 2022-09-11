@@ -2,6 +2,17 @@ import { AuthenticationMiddleware } from '@/presentation/middlewares/authenticat
 import { faker } from '@faker-js/faker'
 import { SchemaValidation } from '@/presentation/contracts/schema-validation'
 import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { AccountModel } from '@/domain/models/account'
+import { LoadAccountByToken } from '@/domain/usecases/load-account-by-token'
+
+const fakeAccount: AccountModel = {
+  id: faker.datatype.uuid(),
+  name: faker.name.findName(),
+  email: faker.internet.email(),
+  password: faker.internet.password(),
+  accessToken: faker.datatype.uuid(),
+  role: 'admin'
+}
 
 class ValidationStub implements SchemaValidation {
   async validate(input: any): Promise<Error | null> {
@@ -9,15 +20,26 @@ class ValidationStub implements SchemaValidation {
   }
 }
 
+class LoadAccountByTokenUseCaseStub implements LoadAccountByToken {
+  async load(token: string): Promise<AccountModel> {
+    return fakeAccount
+  }
+}
+
 interface SutTypes {
   sut: AuthenticationMiddleware
   validationStub: SchemaValidation
+  loadAccountByTokenUseCaseStub: LoadAccountByToken
 }
 
 function makeSut(): SutTypes {
   const validationStub = new ValidationStub()
-  const sut = new AuthenticationMiddleware(validationStub)
-  return { sut, validationStub }
+  const loadAccountByTokenUseCaseStub = new LoadAccountByTokenUseCaseStub()
+  const sut = new AuthenticationMiddleware(
+    validationStub,
+    loadAccountByTokenUseCaseStub
+  )
+  return { sut, validationStub, loadAccountByTokenUseCaseStub }
 }
 
 const fakeAccessToken = faker.datatype.uuid()
@@ -59,5 +81,19 @@ describe('Authentication Middleware', () => {
     const promise = sut.handle(fakeHttpRequest)
 
     await expect(promise).resolves.toEqual(badRequest(error))
+  })
+
+  it('should call loadAccountByToken.load with correct param', async () => {
+    const { sut, loadAccountByTokenUseCaseStub } = makeSut()
+    const loadSpy = jest
+      .spyOn(loadAccountByTokenUseCaseStub, 'load')
+      .mockResolvedValueOnce({} as unknown as AccountModel)
+
+    await sut.handle(fakeHttpRequest)
+
+    expect(loadSpy).toHaveBeenCalledTimes(1)
+    expect(loadSpy).toHaveBeenCalledWith(
+      fakeHttpRequest.headers['x-access-token']
+    )
   })
 })
