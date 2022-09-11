@@ -100,7 +100,7 @@ describe('Authentication Middleware', () => {
     await expect(promise).resolves.toEqual(serverError(error))
   })
 
-  it('should call loadAccountByTokenUseCase.load with correct param', async () => {
+  it('should call loadAccountByTokenUseCase.load with correct param if x-access-token is provided', async () => {
     const { sut, loadAccountByTokenUseCaseStub } = makeSut()
     const loadSpy = jest
       .spyOn(loadAccountByTokenUseCaseStub, 'load')
@@ -112,6 +112,19 @@ describe('Authentication Middleware', () => {
     expect(loadSpy).toHaveBeenCalledWith(
       fakeHttpRequest.headers['x-access-token']
     )
+  })
+
+  it('should call loadAccountByTokenUseCase.load with correct param if x-access-token is not provided', async () => {
+    const { sut, loadAccountByTokenUseCaseStub } = makeSut()
+    const loadSpy = jest
+      .spyOn(loadAccountByTokenUseCaseStub, 'load')
+      .mockResolvedValueOnce({} as unknown as AccountModel)
+
+    const { headers, ...fakeHttpRequestWithoutHeaders } = fakeHttpRequest
+    await sut.handle(fakeHttpRequestWithoutHeaders)
+
+    expect(loadSpy).toHaveBeenCalledTimes(1)
+    expect(loadSpy).toHaveBeenCalledWith('')
   })
 
   it('should return 500 if loadAccountByTokenUseCase.load throws', async () => {
