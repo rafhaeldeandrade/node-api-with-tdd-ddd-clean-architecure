@@ -15,7 +15,7 @@ const fakeAccount: AccountModel = {
   email: faker.internet.email(),
   password: faker.internet.password(),
   accessToken: faker.datatype.uuid(),
-  role: 'admin'
+  role: faker.helpers.arrayElement(['admin', 'moderator', 'writer', 'reader'])
 }
 
 class ValidationStub implements SchemaValidation {
@@ -136,5 +136,22 @@ describe('Authentication Middleware', () => {
     const promise = sut.handle(fakeHttpRequest)
 
     await expect(promise).resolves.toEqual(unauthorized())
+  })
+
+  it('should return 200 with id and role on success', async () => {
+    const { sut, loadAccountByTokenUseCaseStub } = makeSut()
+    loadAccountByTokenUseCaseStub.load = jest
+      .fn()
+      .mockResolvedValueOnce(fakeAccount)
+
+    const promise = sut.handle(fakeHttpRequest)
+
+    await expect(promise).resolves.toEqual({
+      statusCode: 200,
+      body: {
+        id: fakeAccount.id,
+        role: fakeAccount.role
+      }
+    })
   })
 })
