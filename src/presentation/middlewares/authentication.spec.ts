@@ -1,7 +1,10 @@
 import { AuthenticationMiddleware } from '@/presentation/middlewares/authentication'
 import { faker } from '@faker-js/faker'
 import { SchemaValidation } from '@/presentation/contracts/schema-validation'
-import { badRequest } from '@/presentation/helpers/http/http-helper'
+import {
+  badRequest,
+  unauthorized
+} from '@/presentation/helpers/http/http-helper'
 import { AccountModel } from '@/domain/models/account'
 import { LoadAccountByToken } from '@/domain/usecases/load-account-by-token'
 
@@ -95,5 +98,14 @@ describe('Authentication Middleware', () => {
     expect(loadSpy).toHaveBeenCalledWith(
       fakeHttpRequest.headers['x-access-token']
     )
+  })
+
+  it('should return 401 if loadAccountByTokenUseCase returns null (account not found)', async () => {
+    const { sut, loadAccountByTokenUseCaseStub } = makeSut()
+    loadAccountByTokenUseCaseStub.load = jest.fn().mockResolvedValueOnce(null)
+
+    const promise = sut.handle(fakeHttpRequest)
+
+    await expect(promise).resolves.toEqual(unauthorized())
   })
 })
