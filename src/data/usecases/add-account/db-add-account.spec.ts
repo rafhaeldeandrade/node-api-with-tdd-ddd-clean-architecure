@@ -1,7 +1,7 @@
 import { AddAccountRepository } from '@/data/contracts/database/add-account-repository'
 import { Hasher } from '@/data/contracts/authentication/hasher'
 import { DbAddAccount } from '@/data/usecases/add-account/db-add-account'
-import { AccountModel } from '@/domain/models/account'
+import { AccountModel, Roles } from '@/domain/models/account'
 import { AddAccount, AddAccountModel } from '@/domain/usecases/add-account'
 import { faker } from '@faker-js/faker'
 import { LoadAccountByEmailRepository } from '@/data/contracts/database/load-account-by-email-repository'
@@ -13,7 +13,8 @@ const fakePassword = faker.internet.password()
 const fakeData = {
   name: faker.name.findName(),
   email: faker.internet.email(),
-  password: fakePassword
+  password: fakePassword,
+  role: 'reader'
 }
 const fakeEncryptedToken = faker.datatype.uuid()
 function makeAccount(): AccountModel {
@@ -22,7 +23,8 @@ function makeAccount(): AccountModel {
     name: fakeData.name,
     email: fakeData.email,
     password: 'hash' + fakeData.password,
-    accessToken: undefined
+    accessToken: undefined,
+    role: fakeData.role as Roles
   }
 }
 
@@ -164,7 +166,8 @@ describe('DbAddAccountUseCase', () => {
     expect(addSpy).toHaveBeenCalledWith({
       name: fakeData.name,
       email: fakeData.email,
-      password: 'hash' + fakePassword
+      password: 'hash' + fakePassword,
+      role: fakeData.role
     })
   })
 
@@ -233,7 +236,8 @@ describe('DbAddAccountUseCase', () => {
       name: fakeData.name,
       email: fakeData.email,
       password: 'hash' + fakePassword,
-      accessToken: fakeEncryptedToken
+      accessToken: fakeEncryptedToken,
+      role: fakeData.role
     })
   })
 })

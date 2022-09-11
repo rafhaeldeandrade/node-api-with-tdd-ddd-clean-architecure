@@ -3,7 +3,7 @@ import { Encrypter } from '@/data/contracts/authentication/encrypter'
 import { LoadAccountByEmailRepository } from '@/data/contracts/database/load-account-by-email-repository'
 import { UpdateAccessTokenRepository } from '@/data/contracts/database/update-access-token-repository'
 import { DbAuthentication } from '@/data/usecases/authentication/db-authentication'
-import { AccountModel } from '@/domain/models/account'
+import { AccountModel, Roles } from '@/domain/models/account'
 import { faker } from '@faker-js/faker'
 
 const fakePassword = faker.internet.password()
@@ -11,7 +11,13 @@ const fakeAccount = {
   id: faker.datatype.uuid(),
   name: faker.name.findName(),
   email: faker.internet.email(),
-  password: fakePassword
+  password: fakePassword,
+  role: faker.helpers.arrayElement([
+    'admin',
+    'moderator',
+    'writer',
+    'reader'
+  ]) as Roles
 }
 
 class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {

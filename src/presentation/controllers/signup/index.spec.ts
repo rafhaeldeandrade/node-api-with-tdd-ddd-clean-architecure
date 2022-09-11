@@ -1,7 +1,7 @@
 import { SignupController } from '@/presentation/controllers/signup'
 import { faker } from '@faker-js/faker'
 import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
-import { AccountModel } from '@/domain/models/account'
+import { AccountModel, Roles } from '@/domain/models/account'
 import { AddAccountModel, AddAccount } from '@/domain/usecases/add-account'
 import {
   badRequest,
@@ -34,7 +34,13 @@ class AddAccountStub implements AddAccount {
       id: faker.datatype.uuid(),
       name: httpRequest.body.name,
       email: httpRequest.body.email,
-      password: httpRequest.body.password
+      password: httpRequest.body.password,
+      role: faker.helpers.arrayElement([
+        'admin',
+        'moderator',
+        'writer',
+        'reader'
+      ]) as Roles
     }
 
     return fakeAccount

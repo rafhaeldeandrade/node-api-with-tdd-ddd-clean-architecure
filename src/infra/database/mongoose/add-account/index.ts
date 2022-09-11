@@ -7,7 +7,7 @@ export class MongooseAddAccount implements AddAccountRepository {
   async add(accountData: AddAccountModel): Promise<AccountModel> {
     const account = await mongooseAccountModel.create(accountData)
 
-    const { _id, name, email, password } = account
-    return { name, email, password, id: _id.toString() }
+    const { _id, name, email, password, accessToken, role } = account
+    return { name, email, password, id: _id.toString(), accessToken, role }
   }
 }

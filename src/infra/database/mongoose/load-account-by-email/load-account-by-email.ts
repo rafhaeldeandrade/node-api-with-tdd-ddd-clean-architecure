@@ -14,7 +14,9 @@ export class MongooseLoadAccountByEmail
       id: account._id.toString(),
       name: account.name,
       email: account.email,
-      password: account.password
+      password: account.password,
+      accessToken: account.accessToken,
+      role: account.role
     }
   }
 }

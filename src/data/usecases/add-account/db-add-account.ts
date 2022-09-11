@@ -23,6 +23,7 @@ export class DbAddAccount implements AddAccount {
     const hashedPassword = await this.hasher.hash(accountData.password)
     const createdAccount = await this.addAccountRepository.add({
       ...accountData,
+      role: 'reader',
       password: hashedPassword
     })
     const accessToken = this.encrypter.encrypt(createdAccount.id)

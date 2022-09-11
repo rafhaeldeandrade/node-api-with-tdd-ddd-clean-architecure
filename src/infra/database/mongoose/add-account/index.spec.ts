@@ -1,5 +1,8 @@
-import { AddAccountRepository } from '@/data/contracts/database/add-account-repository'
-import { AddAccountModel } from '@/domain/usecases/add-account'
+import {
+  AddAccountRepository,
+  AddAccountRepositoryInput
+} from '@/data/contracts/database/add-account-repository'
+import { Roles } from '@/domain/models/account'
 import { MongooseAddAccount } from '@/infra/database/mongoose/add-account'
 import { mongooseAccountModel } from '@/infra/database/mongoose/schemas/account'
 import { faker } from '@faker-js/faker'
@@ -15,11 +18,12 @@ function makeSut(): SutTypes {
   }
 }
 
-function makeFakeAccount(): AddAccountModel {
+function makeFakeAccount(): AddAccountRepositoryInput {
   return {
     name: faker.name.findName(),
     email: faker.internet.email(),
-    password: faker.internet.password()
+    password: faker.internet.password(),
+    role: 'reader' as Roles
   }
 }
 
@@ -38,10 +42,8 @@ describe('MongooseAddAccount', () => {
 
   it("should call mongoModel's create method with the correct params", async () => {
     const { sut } = makeSut()
-
     const fakeId = faker.datatype.uuid()
     const fakeAccount = makeFakeAccount()
-
     const createSpy = (mongooseAccountModel.create = jest
       .fn()
       .mockResolvedValueOnce({ _id: fakeId, ...fakeAccount }))
