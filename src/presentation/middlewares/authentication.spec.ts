@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker'
 import { SchemaValidation } from '@/presentation/contracts/schema-validation'
 import {
   badRequest,
+  serverError,
   unauthorized
 } from '@/presentation/helpers/http/http-helper'
 import { AccountModel } from '@/domain/models/account'
@@ -79,11 +80,24 @@ describe('Authentication Middleware', () => {
   it('should return 400 if validation.validate returns an error', async () => {
     const { sut, validationStub } = makeSut()
     const error = new Error('any_error')
-    validationStub.validate = jest.fn().mockReturnValueOnce(error)
+    validationStub.validate = jest.fn().mockResolvedValueOnce(error)
 
     const promise = sut.handle(fakeHttpRequest)
 
     await expect(promise).resolves.toEqual(badRequest(error))
+  })
+
+  it('should return 500 if validation.validate throws', async () => {
+    const { sut, validationStub } = makeSut()
+    const error = new Error('any_error')
+    error.stack = 'any_stack'
+    validationStub.validate = jest.fn().mockImplementationOnce(async () => {
+      throw error
+    })
+
+    const promise = sut.handle(fakeHttpRequest)
+
+    await expect(promise).resolves.toEqual(serverError(error))
   })
 
   it('should call loadAccountByToken.load with correct param', async () => {
