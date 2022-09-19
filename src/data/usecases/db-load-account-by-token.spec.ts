@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import { DbLoadAccountByTokenUseCase } from '@/data/usecases/db-load-account-by-token'
 import { LoadAccountByTokenRepository } from '@/data/contracts/database/load-account-by-token'
 import { AccountModel, Roles } from '@/domain/models/account'
+import { Decrypter } from '@/data/contracts/authentication/decrypter'
 
 const fakeAccount = {
   id: faker.datatype.uuid(),
@@ -16,6 +17,15 @@ const fakeAccount = {
   ]) as Roles
 }
 
+const fakePayload = {
+  id: faker.datatype.uuid()
+}
+class DecrypterStub implements Decrypter {
+  decrypt(token: string): any | null {
+    return fakePayload
+  }
+}
+
 class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository {
   async load(token: string): Promise<AccountModel | null> {
     return fakeAccount
@@ -23,16 +33,21 @@ class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository {
 }
 
 interface SutTypes {
-  sut: DbLoadAccountByTokenUseCase
+  decrypterStub: Decrypter
   loadAccountByTokenRepositoryStub: LoadAccountByTokenRepository
+  sut: DbLoadAccountByTokenUseCase
 }
 
 function makeSut(): SutTypes {
+  const decrypterStub = new DecrypterStub()
   const loadAccountByTokenRepositoryStub =
     new LoadAccountByTokenRepositoryStub()
-  const sut = new DbLoadAccountByTokenUseCase(loadAccountByTokenRepositoryStub)
+  const sut = new DbLoadAccountByTokenUseCase(
+    decrypterStub,
+    loadAccountByTokenRepositoryStub
+  )
 
-  return { sut, loadAccountByTokenRepositoryStub }
+  return { sut, decrypterStub, loadAccountByTokenRepositoryStub }
 }
 
 describe('LoadAccountByToken Usecase', () => {
@@ -47,6 +62,16 @@ describe('LoadAccountByToken Usecase', () => {
     const { sut } = makeSut()
 
     expect(sut.load).toBeDefined()
+  })
+
+  it('should call decrypter with correct param', async () => {
+    const { sut, decrypterStub } = makeSut()
+    const decryptSpy = jest.spyOn(decrypterStub, 'decrypt')
+
+    await sut.load(fakeAccessToken)
+
+    expect(decryptSpy).toHaveBeenCalledTimes(1)
+    expect(decryptSpy).toHaveBeenCalledWith(fakeAccessToken)
   })
 
   it('should call loadAccountByTokenRepository with correct param', async () => {
