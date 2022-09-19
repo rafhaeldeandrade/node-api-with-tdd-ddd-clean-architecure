@@ -42,6 +42,18 @@ describe('JwtAdapter', () => {
 
   it('should have a method called decrypt', () => {
     const { sut } = makeSut()
+
     expect(sut.decrypt).toBeDefined()
+  })
+
+  it('should call jwt.verify with correct params if decrypt is called', () => {
+    const { sut } = makeSut()
+    const verifySpy = jest
+      .spyOn(jwt, 'verify')
+      .mockImplementationOnce(() => null)
+
+    sut.decrypt(fakeValue)
+
+    expect(verifySpy).toHaveBeenCalledWith(fakeValue, fakeJwtSecret)
   })
 })
