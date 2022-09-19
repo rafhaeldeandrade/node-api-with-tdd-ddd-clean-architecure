@@ -1,11 +1,31 @@
 import { MongooseLoadAccountByToken } from '@/infra/database/mongoose/load-account-by-token'
+import { faker } from '@faker-js/faker'
+import { mongooseAccountModel } from './schemas/account'
 
 describe('MongooseLoadAccountByToken', () => {
   it('should be defined', () => {
-    expect(new MongooseLoadAccountByToken()).toBeDefined()
+    const sut = new MongooseLoadAccountByToken()
+    expect(sut).toBeDefined()
   })
 
   it('should have a method called load', () => {
-    expect(new MongooseLoadAccountByToken().load).toBeDefined()
+    const sut = new MongooseLoadAccountByToken()
+    expect(sut.load).toBeDefined()
+  })
+
+  it('should call mongooseAccountModel.findOne with correct values', async () => {
+    const sut = new MongooseLoadAccountByToken()
+    const fakeToken = faker.datatype.uuid()
+    const findOneSpy = jest
+      .spyOn(mongooseAccountModel, 'findOne')
+      .mockResolvedValueOnce(null)
+
+    await sut.load(fakeToken)
+
+    expect(findOneSpy).toHaveBeenCalledWith(
+      { accessToken: fakeToken },
+      {},
+      { lean: true }
+    )
   })
 })
