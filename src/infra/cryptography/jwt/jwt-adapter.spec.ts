@@ -39,4 +39,9 @@ describe('JwtAdapter', () => {
     })
     expect(() => sut.encrypt(fakeValue)).toThrow()
   })
+
+  it('should have a method called decrypt', () => {
+    const { sut } = makeSut()
+    expect(sut.decrypt).toBeDefined()
+  })
 })
