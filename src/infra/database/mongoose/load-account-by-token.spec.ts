@@ -1,3 +1,4 @@
+import { Roles } from '@/domain/models/account'
 import { MongooseLoadAccountByToken } from '@/infra/database/mongoose/load-account-by-token'
 import { faker } from '@faker-js/faker'
 import { mongooseAccountModel } from './schemas/account'
@@ -37,5 +38,29 @@ describe('MongooseLoadAccountByToken', () => {
     const promise = sut.load(fakeToken)
 
     await expect(promise).resolves.toBeNull()
+  })
+
+  it('should return an account if mongooseAccountModel.findOne finds successfully', async () => {
+    const fakeAccount = {
+      id: faker.datatype.uuid(),
+      name: faker.name.findName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+      role: faker.helpers.arrayElement([
+        'admin',
+        'moderator',
+        'writer',
+        'reader'
+      ]) as Roles
+    }
+    const sut = new MongooseLoadAccountByToken()
+    const fakeToken = faker.datatype.uuid()
+    mongooseAccountModel.findOne = jest
+      .fn()
+      .mockResolvedValueOnce({ _id: fakeAccount.id, ...fakeAccount })
+
+    const promise = sut.load(fakeToken)
+
+    await expect(promise).resolves.toEqual(fakeAccount)
   })
 })
