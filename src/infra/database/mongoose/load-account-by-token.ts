@@ -1,2 +1,5 @@
-/* eslint-disable @typescript-eslint/no-extraneous-class */
-export class MongooseLoadAccountByToken {}
+export class MongooseLoadAccountByToken {
+  load(): null {
+    return null
+  }
+}
