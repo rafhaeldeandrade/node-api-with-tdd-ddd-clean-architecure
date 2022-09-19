@@ -92,4 +92,13 @@ describe('LoadAccountByToken Usecase', () => {
     expect(loadSpy).toHaveBeenCalledTimes(1)
     expect(loadSpy).toHaveBeenCalledWith(fakeAccessToken)
   })
+
+  it('should return null if loadAccountByTokenRepository returns null', async () => {
+    const { sut, loadAccountByTokenRepositoryStub } = makeSut()
+    loadAccountByTokenRepositoryStub.load = jest.fn().mockReturnValueOnce(null)
+
+    const promise = sut.load(fakeAccessToken)
+
+    await expect(promise).resolves.toBeNull()
+  })
 })
