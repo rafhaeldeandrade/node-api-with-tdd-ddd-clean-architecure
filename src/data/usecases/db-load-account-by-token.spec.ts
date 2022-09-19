@@ -102,6 +102,17 @@ describe('LoadAccountByToken Usecase', () => {
     await expect(promise).resolves.toBeNull()
   })
 
+  it('should throw if loadAccountByTokenRepository throws', async () => {
+    const { sut, loadAccountByTokenRepositoryStub } = makeSut()
+    loadAccountByTokenRepositoryStub.load = jest
+      .fn()
+      .mockRejectedValueOnce(new Error())
+
+    const promise = sut.load(fakeAccessToken)
+
+    await expect(promise).rejects.toThrow()
+  })
+
   it('should return an account on success', async () => {
     const { sut } = makeSut()
 
