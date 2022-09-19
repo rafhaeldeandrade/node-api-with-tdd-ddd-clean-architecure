@@ -74,6 +74,15 @@ describe('LoadAccountByToken Usecase', () => {
     expect(decryptSpy).toHaveBeenCalledWith(fakeAccessToken)
   })
 
+  it('should return null if decrypter returns null', async () => {
+    const { sut, decrypterStub } = makeSut()
+    decrypterStub.decrypt = jest.fn().mockReturnValueOnce(null)
+
+    const promise = sut.load(fakeAccessToken)
+
+    await expect(promise).resolves.toBeNull()
+  })
+
   it('should call loadAccountByTokenRepository with correct param', async () => {
     const { sut, loadAccountByTokenRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadAccountByTokenRepositoryStub, 'load')
