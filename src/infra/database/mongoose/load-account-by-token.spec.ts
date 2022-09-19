@@ -63,4 +63,14 @@ describe('MongooseLoadAccountByToken', () => {
 
     await expect(promise).resolves.toEqual(fakeAccount)
   })
+
+  it('should should throw if mongooseAccountModel.findOne throws', async () => {
+    const sut = new MongooseLoadAccountByToken()
+    const fakeToken = faker.datatype.uuid()
+    mongooseAccountModel.findOne = jest.fn().mockRejectedValueOnce(new Error())
+
+    const promise = sut.load(fakeToken)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
