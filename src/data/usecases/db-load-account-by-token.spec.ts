@@ -16,4 +16,10 @@ describe('LoadAccountByToken Usecase', () => {
 
     expect(sut).toBeDefined()
   })
+
+  it('should have a method called load', () => {
+    const { sut } = makeSut()
+
+    expect(sut.load).toBeDefined()
+  })
 })
