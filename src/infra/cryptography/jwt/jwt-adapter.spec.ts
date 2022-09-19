@@ -67,4 +67,14 @@ describe('JwtAdapter', () => {
 
     expect(result).toBeNull()
   })
+
+  it('should return payload on success when decrypt method was called', () => {
+    const fakeValue = faker.datatype.uuid()
+    const { sut } = makeSut()
+    jwt.verify = jest.fn().mockReturnValueOnce(fakeValue)
+
+    const result = sut.decrypt(fakeValue)
+
+    expect(result).toEqual(fakeValue)
+  })
 })
