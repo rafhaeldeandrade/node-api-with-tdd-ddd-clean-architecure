@@ -101,4 +101,12 @@ describe('LoadAccountByToken Usecase', () => {
 
     await expect(promise).resolves.toBeNull()
   })
+
+  it('should return an account on success', async () => {
+    const { sut } = makeSut()
+
+    const promise = sut.load(fakeAccessToken)
+
+    await expect(promise).resolves.toEqual(fakeAccount)
+  })
 })
