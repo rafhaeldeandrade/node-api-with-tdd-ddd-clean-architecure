@@ -83,7 +83,7 @@ describe('LoadAccountByToken Usecase', () => {
     await expect(promise).resolves.toBeNull()
   })
 
-  it('should call loadAccountByTokenRepository with correct param', async () => {
+  it('should call loadAccountByTokenRepository with correct param if decrypter returns payload', async () => {
     const { sut, loadAccountByTokenRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadAccountByTokenRepositoryStub, 'load')
 
