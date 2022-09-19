@@ -1,2 +1,5 @@
-/* eslint-disable @typescript-eslint/no-extraneous-class */
-export class DbLoadAccountByTokenUseCase {}
+export class DbLoadAccountByTokenUseCase {
+  load(): null {
+    return null
+  }
+}
