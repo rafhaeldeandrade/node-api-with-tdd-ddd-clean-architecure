@@ -10,6 +10,10 @@ export class JwtAdapter implements Encrypter, Decrypter {
   }
 
   decrypt(value: string): any | null {
-    return jwt.verify(value, this.jwtSecret)
+    try {
+      jwt.verify(value, this.jwtSecret)
+    } catch (error) {
+      return null
+    }
   }
 }
