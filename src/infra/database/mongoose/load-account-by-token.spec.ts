@@ -28,4 +28,14 @@ describe('MongooseLoadAccountByToken', () => {
       { lean: true }
     )
   })
+
+  it('should return null mongooseAccountModel.findOne returns null', async () => {
+    const sut = new MongooseLoadAccountByToken()
+    const fakeToken = faker.datatype.uuid()
+    mongooseAccountModel.findOne = jest.fn().mockResolvedValueOnce(null)
+
+    const promise = sut.load(fakeToken)
+
+    await expect(promise).resolves.toBeNull()
+  })
 })
