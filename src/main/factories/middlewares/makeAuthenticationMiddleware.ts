@@ -6,10 +6,16 @@ import { AuthenticationMiddleware } from '@/presentation/middlewares/authenticat
 import { DbLoadAccountByTokenUseCase } from '@/data/usecases/db-load-account-by-token'
 import { JwtAdapter } from '@/infra/cryptography/jwt/jwt-adapter'
 import { MongooseLoadAccountByToken } from '@/infra/database/mongoose/load-account-by-token'
+import { Roles } from '@/domain/models/account'
 
-export function makeAuthenticationMiddleware(): Controller {
+export function makeAuthenticationMiddleware(
+  authorizedRoles: Roles[]
+): Controller {
   const zodSchema = z.object({
-    'x-access-token': z.string().min(1)
+    headers: z.object({
+      'x-access-token': z.string().min(1)
+    }),
+    authorizedRoles: z.array(z.string())
   })
   const zodValidator = new ZodSchemaValidation(zodSchema)
   const jwtDecrypter = new JwtAdapter(env.jwtSecret)
@@ -18,5 +24,5 @@ export function makeAuthenticationMiddleware(): Controller {
     jwtDecrypter,
     mongoLoadAccountByTokenRepository
   )
-  return new AuthenticationMiddleware(zodValidator, usecase)
+  return new AuthenticationMiddleware(zodValidator, authorizedRoles, usecase)
 }
