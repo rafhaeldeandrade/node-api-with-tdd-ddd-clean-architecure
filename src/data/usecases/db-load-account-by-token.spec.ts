@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { DbLoadAccountByTokenUseCase } from '@/data/usecases/db-load-account-by-token'
-import { LoadAccountByTokenRepository } from '@/data/contracts/database/load-account-by-token'
+import { LoadAccountByTokenRepository } from '@/data/contracts/database/load-account-by-token-repository'
 import { AccountModel, Roles } from '@/domain/models/account'
 import { Decrypter } from '@/data/contracts/authentication/decrypter'
 

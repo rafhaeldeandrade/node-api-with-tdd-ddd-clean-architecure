@@ -1,4 +1,4 @@
-import { LoadAccountByTokenRepository } from '@/data/contracts/database/load-account-by-token'
+import { LoadAccountByTokenRepository } from '@/data/contracts/database/load-account-by-token-repository'
 import { AccountModel } from '@/domain/models/account'
 import { mongooseAccountModel } from '@/infra/database/mongoose/schemas/account'
 
