@@ -20,9 +20,8 @@ export class AuthenticationMiddleware implements Middleware {
       const { headers } = request
       const error = await this.validation.validate(headers)
       if (error) return badRequest(error)
-      const account = await this.loadAccountByTokenUseCase.load(
-        headers ? headers['x-access-token'] : ''
-      )
+      const accessToken = headers?.['x-access-token'] as string
+      const account = await this.loadAccountByTokenUseCase.load(accessToken)
       if (!account) return unauthorized()
       return ok({
         id: account.id,

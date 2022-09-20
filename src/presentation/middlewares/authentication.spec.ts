@@ -124,7 +124,7 @@ describe('Authentication Middleware', () => {
     await sut.handle(fakeHttpRequestWithoutHeaders)
 
     expect(loadSpy).toHaveBeenCalledTimes(1)
-    expect(loadSpy).toHaveBeenCalledWith('')
+    expect(loadSpy).toHaveBeenCalledWith(undefined)
   })
 
   it('should return 500 if loadAccountByTokenUseCase.load throws', async () => {
