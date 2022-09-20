@@ -6,7 +6,7 @@ import {
   serverError,
   unauthorized
 } from '@/presentation/helpers/http/http-helper'
-import { AccountModel } from '@/domain/models/account'
+import { AccountModel, Roles } from '@/domain/models/account'
 import { LoadAccountByToken } from '@/domain/usecases/load-account-by-token'
 
 const fakeAccount: AccountModel = {
@@ -33,17 +33,25 @@ class LoadAccountByTokenUseCaseStub implements LoadAccountByToken {
 interface SutTypes {
   sut: AuthenticationMiddleware
   validationStub: SchemaValidation
+  authorizedRoles: Roles[]
   loadAccountByTokenUseCaseStub: LoadAccountByToken
 }
 
 function makeSut(): SutTypes {
   const validationStub = new ValidationStub()
+  const authorizedRoles: Roles[] = faker.helpers.arrayElements([
+    'admin',
+    'moderator',
+    'writer',
+    'reader'
+  ])
   const loadAccountByTokenUseCaseStub = new LoadAccountByTokenUseCaseStub()
   const sut = new AuthenticationMiddleware(
     validationStub,
+    authorizedRoles,
     loadAccountByTokenUseCaseStub
   )
-  return { sut, validationStub, loadAccountByTokenUseCaseStub }
+  return { sut, validationStub, authorizedRoles, loadAccountByTokenUseCaseStub }
 }
 
 const fakeAccessToken = faker.datatype.uuid()
@@ -68,13 +76,16 @@ describe('Authentication Middleware', () => {
   })
 
   it('should call validation.validate with correct param', async () => {
-    const { sut, validationStub } = makeSut()
+    const { sut, validationStub, authorizedRoles } = makeSut()
     const validateSpy = jest.spyOn(validationStub, 'validate')
 
     await sut.handle(fakeHttpRequest)
 
     expect(validateSpy).toHaveBeenCalledTimes(1)
-    expect(validateSpy).toHaveBeenCalledWith(fakeHttpRequest.headers)
+    expect(validateSpy).toHaveBeenCalledWith({
+      headers: fakeHttpRequest.headers,
+      authorizedRoles
+    })
   })
 
   it('should return 400 if validation.validate returns an error', async () => {
