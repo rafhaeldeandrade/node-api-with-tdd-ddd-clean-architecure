@@ -8,17 +8,22 @@ import {
   unauthorized
 } from '@/presentation/helpers/http/http-helper'
 import { LoadAccountByToken } from '@/domain/usecases/load-account-by-token'
+import { Roles } from '@/domain/models/account'
 
 export class AuthenticationMiddleware implements Middleware {
   constructor(
     private readonly validation: SchemaValidation,
+    private readonly authorizedRoles: Roles[],
     private readonly loadAccountByTokenUseCase: LoadAccountByToken
   ) {}
 
   async handle(request: httpRequest): Promise<httpResponse> {
     try {
       const { headers } = request
-      const error = await this.validation.validate(headers)
+      const error = await this.validation.validate({
+        headers,
+        authorizedRoles: this.authorizedRoles
+      })
       if (error) return badRequest(error)
       const accessToken = headers?.['x-access-token'] as string
       const account = await this.loadAccountByTokenUseCase.load(accessToken)
