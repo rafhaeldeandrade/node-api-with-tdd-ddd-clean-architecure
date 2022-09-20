@@ -34,7 +34,7 @@
     "dev": "tsnd --respawn -r tsconfig-paths/register src/main/server.ts",
     "start": "pm2-runtime ./dist/main/server.js",
     "build": "tsc --build && tsc-alias -p tsconfig.json",
-    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
+    "test": "jest --passWithNoTests --silent --noStackTrace",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:unit": "npm test -- -c jest-unit.config.js --watch",
     "test:integration": "npm test -- -c jest-integration.config.js --watch",
