@@ -15,7 +15,7 @@ const fakeAccount: AccountModel = {
   email: faker.internet.email(),
   password: faker.internet.password(),
   accessToken: faker.datatype.uuid(),
-  role: faker.helpers.arrayElement(['admin', 'moderator', 'writer', 'reader'])
+  role: faker.helpers.arrayElement(['admin', 'moderator', 'writer'])
 }
 
 class ValidationStub implements SchemaValidation {
@@ -39,12 +39,7 @@ interface SutTypes {
 
 function makeSut(): SutTypes {
   const validationStub = new ValidationStub()
-  const authorizedRoles: Roles[] = faker.helpers.arrayElements([
-    'admin',
-    'moderator',
-    'writer',
-    'reader'
-  ])
+  const authorizedRoles: Roles[] = ['admin', 'moderator', 'writer']
   const loadAccountByTokenUseCaseStub = new LoadAccountByTokenUseCaseStub()
   const sut = new AuthenticationMiddleware(
     validationStub,
@@ -156,6 +151,18 @@ describe('Authentication Middleware', () => {
   it('should return 401 if loadAccountByTokenUseCase returns null (account not found)', async () => {
     const { sut, loadAccountByTokenUseCaseStub } = makeSut()
     loadAccountByTokenUseCaseStub.load = jest.fn().mockResolvedValueOnce(null)
+
+    const promise = sut.handle(fakeHttpRequest)
+
+    await expect(promise).resolves.toEqual(unauthorized())
+  })
+
+  it('should return 401 if loadAccountByTokenUseCase returns an account but its role doesnt fit authorizedRoles', async () => {
+    const { sut, loadAccountByTokenUseCaseStub } = makeSut()
+    loadAccountByTokenUseCaseStub.load = jest.fn().mockResolvedValueOnce({
+      ...fakeAccount,
+      role: 'reader'
+    })
 
     const promise = sut.handle(fakeHttpRequest)
 
