@@ -27,7 +27,9 @@ export class AuthenticationMiddleware implements Middleware {
       if (error) return badRequest(error)
       const accessToken = headers?.['x-access-token'] as string
       const account = await this.loadAccountByTokenUseCase.load(accessToken)
-      if (!account) return unauthorized()
+      if (!account || !this.authorizedRoles.includes(account.role)) {
+        return unauthorized()
+      }
       return ok({
         id: account.id,
         role: account.role
